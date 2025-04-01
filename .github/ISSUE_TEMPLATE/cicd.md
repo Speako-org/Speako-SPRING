@@ -1,7 +1,7 @@
 ---
 name: CI/CD
 about: CI/CD 관련 이슈 템플릿
-title: "[CI/CD]"
+title: "🚀 [CI/CD]"
 labels: "🚀 CI/CD"
 assignees: ''
 
