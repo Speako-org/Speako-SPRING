@@ -1,4 +1,4 @@
-package com.speako.event;
+package com.speako.event.stt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
