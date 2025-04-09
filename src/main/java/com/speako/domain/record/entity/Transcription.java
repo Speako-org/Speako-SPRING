@@ -1,6 +1,6 @@
 package com.speako.domain.record.entity;
 
-import com.speako.domain.record.entity.enums.TranscriptStatus;
+import com.speako.domain.record.entity.enums.TranscriptionStatus;
 import com.speako.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Transcript {
+public class Transcription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +46,7 @@ public class Transcript {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private TranscriptStatus transcriptStatus;
+    private TranscriptionStatus transcriptionStatus;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
