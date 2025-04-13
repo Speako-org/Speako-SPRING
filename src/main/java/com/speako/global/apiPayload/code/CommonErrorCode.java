@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public enum CommonErrorCode implements BaseErrorCode{
 
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON400-0", "잘못된 요청입니다."),

@@ -1,6 +1,6 @@
 package com.speako.domain.analysis.entity;
 
-import com.speako.domain.record.entity.Transcript;
+import com.speako.domain.record.entity.Transcription;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -24,15 +24,15 @@ public class Analysis {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transcript_id")
-    private Transcript transcript;
+    @JoinColumn(name = "transcription_id")
+    private Transcription transcription;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "negative_sentences", columnDefinition = "jsonb", updatable = false)
     private List<String> negativeSentences;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "negative_word", columnDefinition = "jsonb", updatable = false)
+    @Column(name = "negative_words", columnDefinition = "jsonb", updatable = false)
     private List<String> negativeWords;
 
     @Column(name = "negative_ratio", nullable = false)

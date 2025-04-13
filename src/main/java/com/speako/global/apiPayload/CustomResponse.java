@@ -13,10 +13,13 @@ public class CustomResponse<T> {
     @JsonProperty("isSuccess")
     private boolean isSuccess;
 
+    @JsonProperty("code")
     private String code;
 
+    @JsonProperty("message")
     private String message;
 
+    @JsonProperty("result")
     private final T result;
 
     // 기본 OK 성공 응답
