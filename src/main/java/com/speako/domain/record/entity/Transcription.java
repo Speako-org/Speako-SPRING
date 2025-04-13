@@ -51,4 +51,9 @@ public class Transcription {
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    // TranscriptionStatus 업데이트 (상태 변경)
+    public void updateTranscriptionStatus(TranscriptionStatus transcriptionStatus) {
+        this.transcriptionStatus = transcriptionStatus;
+    }
 }
