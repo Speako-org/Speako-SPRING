@@ -29,8 +29,7 @@ public class Transcription {
     @JoinColumn(name = "record_id")
     private Record record;
 
-    @Lob
-    @Column(name = "s3_path", nullable = false, updatable = false)
+    @Column(name = "s3_path", nullable = false, updatable = false, columnDefinition = "TEXT")
     private String s3Path;
 
     @Column(name = "title", nullable = false)
