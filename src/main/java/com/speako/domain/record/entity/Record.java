@@ -25,6 +25,7 @@ public class Record {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Lob
     @Column(name = "s3_path", nullable = false, updatable = false)
     private String s3Path;
 
