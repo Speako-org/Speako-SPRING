@@ -25,7 +25,7 @@ public class Record {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "s3_path", nullable = false, updatable = false)
+    @Column(name = "s3_path", nullable = false, updatable = false, columnDefinition = "TEXT")
     private String s3Path;
 
     @Enumerated(EnumType.STRING)

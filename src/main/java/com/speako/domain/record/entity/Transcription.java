@@ -29,7 +29,7 @@ public class Transcription {
     @JoinColumn(name = "record_id")
     private Record record;
 
-    @Column(name = "s3_path", nullable = false, updatable = false)
+    @Column(name = "s3_path", nullable = false, updatable = false, columnDefinition = "TEXT")
     private String s3Path;
 
     @Column(name = "title", nullable = false)
@@ -51,4 +51,9 @@ public class Transcription {
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    // TranscriptionStatus 업데이트 (상태 변경)
+    public void updateTranscriptionStatus(TranscriptionStatus transcriptionStatus) {
+        this.transcriptionStatus = transcriptionStatus;
+    }
 }
