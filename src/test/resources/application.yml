@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: test
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/speako-dev
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true

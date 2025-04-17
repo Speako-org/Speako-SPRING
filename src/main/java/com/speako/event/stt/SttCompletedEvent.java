@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class SttCompletedEvent {
 
-    private final Long transcriptId;
+    private final Long transcriptionId;
     private final String text;
 }

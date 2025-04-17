@@ -8,11 +8,10 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 public class NlpAnalysisResponse {
-    private final Long transcriptId;
+    private final Long transcriptionId;
 
-    private final List<String> negativeSentences;
     private final List<String> negativeWords;
 
-    private final double negativeRatio;
-    private final double positiveRatio;
+    private final float negativeRatio;
+    private final float positiveRatio;
 }
