@@ -1,6 +1,6 @@
 package com.speako.event.handler;
 
-import com.speako.domain.record.repository.TranscriptionRepository;
+import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.event.nlp.NlpCompletedEvent;
 import com.speako.event.stt.SttCompletedEvent;
 import com.speako.event.stt.SttCompletedEventHandler;

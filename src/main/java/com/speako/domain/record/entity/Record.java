@@ -25,7 +25,7 @@ public class Record {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "s3_path", nullable = false, updatable = false, columnDefinition = "TEXT")
+    @Column(name = "s3_path", columnDefinition = "TEXT")
     private String s3Path;
 
     @Enumerated(EnumType.STRING)
@@ -35,4 +35,14 @@ public class Record {
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    // recordStatus 업데이트 (상태 변경)
+    public void updateRecordStatus(RecordStatus recordStatus) {
+        this.recordStatus = recordStatus;
+    }
+
+    // s3Path 업데이트
+    public void updateRecordS3Path(String s3Path) {
+        this.s3Path = s3Path;
+    }
 }
