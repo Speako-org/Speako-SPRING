@@ -2,8 +2,8 @@ package com.speako.integration;
 
 import com.speako.domain.analysis.entity.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
-import com.speako.domain.record.entity.Transcription;
-import com.speako.domain.record.repository.TranscriptionRepository;
+import com.speako.domain.transcription.entity.Transcription;
+import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.domain.user.entity.User;
 import com.speako.domain.user.entity.enums.UserGender;
 import com.speako.domain.user.repository.UserRepository;
@@ -25,7 +25,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.speako.domain.record.entity.enums.TranscriptionStatus.*;
+import static com.speako.domain.transcription.entity.enums.TranscriptionStatus.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.anyString;

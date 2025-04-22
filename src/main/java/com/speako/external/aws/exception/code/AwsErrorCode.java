@@ -1,4 +1,4 @@
-package com.speako.domain.record.exception.code;
+package com.speako.external.aws.exception.code;
 
 import com.speako.global.apiPayload.code.BaseErrorCode;
 import lombok.AllArgsConstructor;
@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum RecordErrorCode implements BaseErrorCode {
+public enum AwsErrorCode implements BaseErrorCode {
 
-    RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "RECORD404-1", "Id 값과 일치하는 Record가 존재하지 않습니다."),
+    TEXT_READ_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AWS500-1", "S3 텍스트 파일 읽기에 실패했습니다."),
     ;
 
     private final HttpStatus status;

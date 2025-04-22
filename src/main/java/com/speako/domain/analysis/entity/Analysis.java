@@ -1,6 +1,6 @@
 package com.speako.domain.analysis.entity;
 
-import com.speako.domain.record.entity.Transcription;
+import com.speako.domain.transcription.entity.Transcription;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;

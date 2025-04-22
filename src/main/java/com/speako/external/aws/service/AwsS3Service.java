@@ -1,26 +1,29 @@
-package com.speako.domain.record.service;
+package com.speako.external.aws.service;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.speako.domain.record.dto.resDTO.PresignedUrlResDTO;
+import com.speako.external.aws.exception.code.AwsErrorCode;
+import com.speako.external.aws.exception.handler.AwsHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
 //@Profile("s3")
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AwsS3Service {
 
-    @Value("${spring.cloud.aws.s3.bucket}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     private final AmazonS3 amazonS3;
@@ -61,5 +64,19 @@ public class AwsS3Service {
         expiration.setTime(expirationTime);
 
         return expiration;
+    }
+
+    // S3 버킷에서 전체 텍스트 가져오기
+    public String getTranscriptionFullText(String transcriptionS3Path) {
+
+        // transcriptionS3Path이 result-text/transcribe-example.txt 와 같이 디렉토리도 포함한 형식으로 되어있다고 가정
+        S3Object s3Object = amazonS3.getObject(bucket, transcriptionS3Path);
+
+        try (S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent()) {
+            // 스트림 전체를 한 번에 문자열로 변환
+            return new String(s3ObjectInputStream.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new AwsHandler(AwsErrorCode.TEXT_READ_FAILED);
+        }
     }
 }

@@ -2,9 +2,9 @@ package com.speako.event.handler;
 
 import com.speako.domain.analysis.entity.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
-import com.speako.domain.record.entity.Transcription;
-import com.speako.domain.record.entity.enums.TranscriptionStatus;
-import com.speako.domain.record.repository.TranscriptionRepository;
+import com.speako.domain.transcription.entity.Transcription;
+import com.speako.domain.transcription.entity.enums.TranscriptionStatus;
+import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.event.nlp.NlpCompletedEvent;
 import com.speako.event.nlp.NlpCompletedEventHandler;
 import org.junit.jupiter.api.BeforeEach;
