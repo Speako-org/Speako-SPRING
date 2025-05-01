@@ -35,13 +35,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # yml 파일 생성
-      - name: Make application.yml
-        run: |
-          mkdir -p ./src/main/resources
-          printf "%s\n" "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
-        shell: bash
-
       # Spring Boot 어플리케이션 빌드
       - name: Spring Boot Build
         run: ./gradlew clean build -x test
@@ -73,8 +66,8 @@ jobs:
           envs: COMPOSE
           script_stop: true
           script: |
-            printf "%s\n" "${{ secrets.ENV_VARS }}" | sudo tee /home/ubuntu/.env > /dev/null
-            sudo docker compose -f $COMPOSE --env-file /home/ubuntu/.env down
+            printf "%s\n" "${{ secrets.APPLICATION_YML }}" | sudo tee /home/ubuntu/application.yml > /dev/null
+            sudo docker compose -f $COMPOSE down
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }}
-            sudo docker compose -f $COMPOSE --env-file /home/ubuntu/.env up -d
+            sudo docker compose -f $COMPOSE up -d
             sudo docker image prune -f
