@@ -8,10 +8,10 @@ import com.speako.domain.transcription.exception.code.TranscriptionErrorCode;
 import com.speako.domain.transcription.exception.handler.TranscriptionHandler;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.event.stt.SttCompletedEvent;
-import com.speako.event.stt.SttCompletedEventHandler;
 import com.speako.external.aws.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,7 +28,7 @@ public class TranscriptionCommandService {
 
     private final TranscriptionRepository transcriptionRepository;
     private final WebClient fastApiWebClient;
-    private final SttCompletedEventHandler sttCompletedEventHandler;
+    private final ApplicationEventPublisher eventPublisher;
     private final AwsS3Service awsS3Service;
 
     // 전달받은 메타데이터로 Transcription 생성 및 fastApi 호출 (Transcribe 작업 요청)
@@ -107,7 +107,7 @@ public class TranscriptionCommandService {
         transcription.updateTranscriptionStatus(TranscriptionStatus.STT_COMPLETED);
 
         // SttCompletedEvent 발행
-        sttCompletedEventHandler.handleSttCompleted(new SttCompletedEvent(transcriptionId, transcriptionFullText));
+        eventPublisher.publishEvent(new SttCompletedEvent(transcriptionId, transcriptionFullText));
     }
 
     /*
