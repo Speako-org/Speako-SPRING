@@ -2,8 +2,8 @@ package com.speako.event.stt;
 
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.event.nlp.NlpCompletedEvent;
-import com.speako.external.nlp.NlpAnalysisClient;
-import com.speako.external.nlp.NlpAnalysisResponse;
+import com.speako.external.nlp.NlpAnalyzeClient;
+import com.speako.external.nlp.NlpAnalyzeResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,42 +20,26 @@ public class SttCompletedEventHandler {
 
     public static String threadName;
 
-    private final NlpAnalysisClient nlpApiClient;
+    private final NlpAnalyzeClient nlpAnalyzeClient;
     private final ApplicationEventPublisher eventPublisher;
     private final TranscriptionRepository transcriptionRepository;
 
     @Async("sttTaskExecutor")
     @EventListener
     public void handleSttCompleted(SttCompletedEvent event) {
-        System.out.println("stt handler thread: " + Thread.currentThread().getName());
+        //테스트용
         threadName = Thread.currentThread().getName();
 
         log.info(
-                "[STT 이벤트 수신] transcriptionId={} / 텍스트 길이={} → NLP 서버 분석 요청",
-                event.getTranscriptionId(), event.getText().length()
+                "[STT 완료 이벤트 수신] transcriptionId={} → NLP 서버 분석 요청",
+                event.getTranscriptionId()
         );
 
-        try {
-            // NLP 서버 분석 요청
-            NlpAnalysisResponse result = nlpApiClient.analyze(event.getText());
+        //TODO: transcription 상태 변경 코드 추가
+        //      transcriptionService.updateStatus(event.getTranscriptionId(), NLP_IN_PROGRESS);
 
-            // 분석 완료 이벤트 발행
-            eventPublisher.publishEvent(new NlpCompletedEvent(
-                    event.getTranscriptionId(),
-                    result.getNegativeWords(),
-                    result.getNegativeRatio(),
-                    result.getPositiveRatio()
-            ));
-        } catch (Exception e) {
-            log.error("[NLP 분석 실패] transcriptionId={} / 이유={}",
-                    event.getTranscriptionId(),
-                    e.getMessage(), e);
+        nlpAnalyzeClient.analyze(event.getTranscriptionId() , event.getTranscriptionS3Path());
 
-            transcriptionRepository.findById(event.getTranscriptionId())
-                    .ifPresent(transcription -> {
-                        transcription.updateTranscriptionStatus(ANALYSIS_FAIL);
-                        transcriptionRepository.save(transcription);
-                    });
-        }
+        log.info("[NLP 분석 요청] transcriptionId={}", event.getTranscriptionId());
     }
 }

@@ -26,7 +26,7 @@ public class NlpCompletedEventHandler {
     @Async("nlpTaskExecutor")
     @EventListener
     public void handleNlpCompleted(NlpCompletedEvent event) {
-        System.out.println("nlp handler thread: " + Thread.currentThread().getName());
+        //테스트용
         threadName = Thread.currentThread().getName();
 
         log.info("[NLP 분석 완료 이벤트 수신] transcriptionId={} / 욕설={}개",
