@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class NlpAnalysisResponse {
+public class NlpAnalyzeResponse {
     private final Long transcriptionId;
 
     private final List<String> negativeWords;

@@ -8,5 +8,5 @@ import lombok.Getter;
 public class SttCompletedEvent {
 
     private final Long transcriptionId;
-    private final String text;
+    private final String transcriptionS3Path;
 }
