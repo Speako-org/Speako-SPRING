@@ -6,11 +6,13 @@ import java.util.List;
 
 public record NlpAnalysisResult(
 
-        @JsonProperty("negative_words")
-        List<String> negativeWords,
+        @JsonProperty("positive_ratio")
+        Float positiveRatio,
         @JsonProperty("negative_ratio")
         Float negativeRatio,
-        @JsonProperty("positive_ratio")
-        Float positiveRatio
+        @JsonProperty("neutral_ratio")
+        Float neutralRatio,
+        @JsonProperty("negative_sentence")
+        List<String> negativeSentences
 ) {
 }
