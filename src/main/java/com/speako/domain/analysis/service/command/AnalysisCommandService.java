@@ -1,7 +1,6 @@
 package com.speako.domain.analysis.service.command;
 
 import com.speako.domain.analysis.dto.reqDTO.NlpAnalysisResult;
-import com.speako.domain.analysis.dto.reqDTO.NlpCallbackRequestDTO;
 import com.speako.domain.analysis.entity.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
 import com.speako.domain.transcription.entity.Transcription;
@@ -25,9 +24,10 @@ public class AnalysisCommandService {
         return analysisRepository.save(
                 Analysis.builder()
                         .transcription(transcription)
-                        .negativeRatio(result.negativeRatio())
                         .positiveRatio(result.positiveRatio())
-                        .negativeWords(result.negativeWords())
+                        .negativeRatio(result.negativeRatio())
+                        .neutralRatio(result.neutralRatio())
+                        .negativeSentences(result.negativeSentences())
                         .build()
         );
     }
@@ -46,6 +46,5 @@ public class AnalysisCommandService {
 
         //TODO: FCM
     }
-
 
 }
