@@ -10,7 +10,7 @@ public class NlpCompletedEvent {
 
     private final Long transcriptionId;
 
-    private final List<String> negativeWords;
+    //private final List<String> negativeWords;
 
     private final float negativeRatio;
     private final float positiveRatio;

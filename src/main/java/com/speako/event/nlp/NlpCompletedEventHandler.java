@@ -30,8 +30,8 @@ public class NlpCompletedEventHandler {
         threadName = Thread.currentThread().getName();
 
         log.info("[NLP 분석 완료 이벤트 수신] transcriptionId={} / 욕설={}개",
-                event.getTranscriptionId(),
-                event.getNegativeWords().size()
+                event.getTranscriptionId()
+                //event.getNegativeWords().size()
         );
 
         // Transcription 조회
@@ -43,7 +43,7 @@ public class NlpCompletedEventHandler {
         Analysis analysis = Analysis.builder()
                 .transcription(transcription)
                 .negativeSentences(new ArrayList<>())
-                .negativeWords(event.getNegativeWords())
+                //.negativeWords(event.getNegativeWords())
                 .negativeRatio(event.getNegativeRatio())
                 .positiveRatio(event.getPositiveRatio())
                 .build();
