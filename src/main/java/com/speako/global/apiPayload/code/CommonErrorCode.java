@@ -12,7 +12,7 @@ public enum CommonErrorCode implements BaseErrorCode{
 
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
 
-    FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "권한이 없습"),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "권한이 없습니다."),
 
     NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON404", "리소스를 찾을 수 없습니다."),
 

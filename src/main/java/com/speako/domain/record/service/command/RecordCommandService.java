@@ -4,11 +4,11 @@ import com.speako.domain.record.dto.resDTO.PresignedUrlResDTO;
 import com.speako.domain.record.dto.resDTO.RecordUploadResDTO;
 import com.speako.domain.record.entity.Record;
 import com.speako.domain.record.entity.enums.RecordStatus;
-import com.speako.domain.record.exception.code.RecordErrorCode;
-import com.speako.domain.record.exception.handler.RecordHandler;
+import com.speako.domain.record.exception.RecordErrorCode;
 import com.speako.domain.record.repository.RecordRepository;
 import com.speako.domain.transcription.service.command.TranscriptionCommandService;
 import com.speako.external.aws.service.AwsS3Service;
+import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +42,7 @@ public class RecordCommandService {
         } else {
             // recordId가 null이 아니면, DB에 해당 Id의 값이 있는지 확인
             recordRepository.findById(recordId)
-                    .orElseThrow(() -> new RecordHandler(RecordErrorCode.RECORD_NOT_FOUND));
+                    .orElseThrow(() -> new CustomException(RecordErrorCode.RECORD_NOT_FOUND));
         }
         return new RecordUploadResDTO(recordId, presignedDTO.presignedUrl(), presignedDTO.key());
     }
@@ -52,7 +52,7 @@ public class RecordCommandService {
 
         // Record 상태 및 s3 경로 업데이트
         Record record = recordRepository.findById(recordId)
-                .orElseThrow(() -> new RecordHandler(RecordErrorCode.RECORD_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(RecordErrorCode.RECORD_NOT_FOUND));
         record.updateRecordStatus(RecordStatus.SAVED);
         record.updateRecordS3Path(recordS3Path);
 

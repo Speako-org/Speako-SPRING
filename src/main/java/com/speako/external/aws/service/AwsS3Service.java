@@ -6,8 +6,8 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.speako.domain.record.dto.resDTO.PresignedUrlResDTO;
-import com.speako.external.aws.exception.code.AwsErrorCode;
-import com.speako.external.aws.exception.handler.AwsHandler;
+import com.speako.external.aws.exception.AwsErrorCode;
+import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -76,7 +76,7 @@ public class AwsS3Service {
             // 스트림 전체를 한 번에 문자열로 변환
             return new String(s3ObjectInputStream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new AwsHandler(AwsErrorCode.TEXT_READ_FAILED);
+            throw new CustomException(AwsErrorCode.TEXT_READ_FAILED);
         }
     }
 }
