@@ -31,7 +31,7 @@ public class User {
     @Column(name = "username", nullable = false, length = 20)
     private String username;
 
-    @Column(name = "age", nullable = false)
+    @Column(name = "age")
     private Integer age;
 
     @Enumerated(EnumType.STRING)
