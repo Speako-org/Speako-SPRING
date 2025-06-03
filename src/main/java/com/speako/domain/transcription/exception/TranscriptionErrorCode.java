@@ -1,4 +1,4 @@
-package com.speako.domain.record.exception.code;
+package com.speako.domain.transcription.exception;
 
 import com.speako.global.apiPayload.code.BaseErrorCode;
 import lombok.AllArgsConstructor;
@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum RecordErrorCode implements BaseErrorCode {
+public enum TranscriptionErrorCode implements BaseErrorCode {
 
-    RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "RECORD404-1", "Id 값과 일치하는 Record가 존재하지 않습니다."),
+    TRANSCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "TRANSCRIPTION404-1", "Id 값과 일치하는 Transcription이 존재하지 않습니다."),
     ;
 
     private final HttpStatus status;

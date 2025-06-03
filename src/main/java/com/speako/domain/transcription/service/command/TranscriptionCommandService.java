@@ -4,12 +4,11 @@ import com.speako.domain.record.entity.Record;
 import com.speako.domain.transcription.dto.reqDTO.TranscribeReqDTO;
 import com.speako.domain.transcription.entity.Transcription;
 import com.speako.domain.transcription.entity.enums.TranscriptionStatus;
-import com.speako.domain.transcription.exception.code.TranscriptionErrorCode;
-import com.speako.domain.transcription.exception.handler.TranscriptionHandler;
+import com.speako.domain.transcription.exception.TranscriptionErrorCode;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
-import com.speako.event.stt.SttCompletedEvent;
 import com.speako.external.aws.service.AwsS3Service;
 import com.speako.external.nlp.NlpAnalyzeClient;
+import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -94,7 +93,7 @@ public class TranscriptionCommandService {
     public void completeStt(Long transcriptionId, String transcriptionS3Path) {
 
         Transcription transcription = transcriptionRepository.findById(transcriptionId)
-                .orElseThrow(() -> new TranscriptionHandler(TranscriptionErrorCode.TRANSCRIPTION_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(TranscriptionErrorCode.TRANSCRIPTION_NOT_FOUND));
 
         // S3 버킷에서 전체 텍스트 가져오기
         String transcriptionFullText = awsS3Service.getTranscriptionFullText(transcriptionS3Path);
@@ -146,4 +145,3 @@ public class TranscriptionCommandService {
         return thumbnailBuilder.toString().trim();
     }
 }
-
