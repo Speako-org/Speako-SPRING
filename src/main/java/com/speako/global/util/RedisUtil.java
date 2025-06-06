@@ -1,12 +1,14 @@
 package com.speako.global.util;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RedisUtil {
@@ -16,11 +18,15 @@ public class RedisUtil {
 
     // refresh 토큰 저장
     public void saveRefresh(String email, String refreshToken, long refreshTokenExpiration) {
+
+        log.info("[RedisUtil] Redis에 refresh 토큰을 저장합니다.");
         redisTemplate.opsForValue().set(REFRESH_PREFIX + email, refreshToken, Duration.ofSeconds(refreshTokenExpiration));
     }
 
     // 기존 refresh 토큰 존재하는 경우 삭제 (refresh 토큰 발급 전에 실행 됨)
     public void deleteRefresh(String email) {
+
+        log.info("[RedisUtil] 특정 email에 해당하는 refresh 토큰이 있을 경우 삭제합니다.");
         redisTemplate.delete(REFRESH_PREFIX + email);
     }
 

@@ -39,16 +39,20 @@ public class AuthService {
     @Transactional
     public Long signup(SignupRequest signupRequest) {
 
+        log.info("[AuthService] 회원가입 로직을 시작합니다.");
         if (userRepository.findByEmail(signupRequest.email()).isPresent()) {
+            log.warn("[AuthService] 입력된 이메일에 해당하는 유저계정이 이미 존재합니다.");
             throw new CustomException(UserErrorCode.USER_EMAIL_ALREADY_EXISTS);
         }
         User user = userRepository.save(UserConverter.toUser(signupRequest, bCryptPasswordEncoder));
+        log.info("[AuthService] 회원가입 완료");
         return user.getId();
     }
 
     // 로그인
     public LoginResponse login(LoginRequest loginRequest) {
 
+        log.info("[AuthService] 로그인 로직을 시작합니다.");
         int maxFail = 5;
         final long duration = 10 * 60; // 10분
 
@@ -61,6 +65,7 @@ public class AuthService {
 
         // 최대 로그인 시도 가능 횟수 초과 시 에러
         if (failCount >= maxFail) {
+            log.warn("[AuthService] 최대 로그인 시도 가능 횟수를 초과하였습니다.");
             throw new CustomException(SecurityErrorCode.TOO_MANY_LOGIN_ATTEMPTS);
         }
         /*
@@ -73,19 +78,20 @@ public class AuthService {
         Optional<User> user = userRepository.findByEmail(loginRequest.email());
         // 이메일 검증
         if (user.isEmpty()) {
-            log.warn("Login failed for email: {}", loginRequest.email());
+            log.warn("[AuthService] 이메일 {} 에 대해 로그인 실패하였습니다.", loginRequest.email());
             redisUtil.increment(redisKey, duration);
             redisUtil.expire(redisKey, duration);
             throw new CustomException(SecurityErrorCode.INVALID_EMAIL_OR_PASSWORD);
         }
         // 비밀번호 검증
         if (!bCryptPasswordEncoder.matches(loginRequest.password(), user.get().getPassword())) {
-            log.warn("Login failed for password: {}", loginRequest.password());
+            log.warn("[AuthService] 해당 비밀번호를 통한 로그인에 실패하였습니다.");
             redisUtil.increment(redisKey, duration);
             redisUtil.expire(redisKey, duration);
             throw new CustomException(SecurityErrorCode.INVALID_EMAIL_OR_PASSWORD);
         }
         // 로그인 성공 시 실패 기록 삭제
+        log.warn("[AuthService] 입력된 이메일&비밀번호가 기존에 회원가입한 계정 정보와 일치합니다.");
         redisUtil.delete(redisKey);
 
         // CustomUserDetails 객체 생성 및 Access/Refresh 토큰 발급
@@ -93,23 +99,26 @@ public class AuthService {
         String accessToken = jwtTokenProvider.createJwtAccessToken(customUserDetails);
         String refreshToken = jwtTokenProvider.createJwtRefreshToken(customUserDetails);
 
+        log.warn("[AuthService] 로그인 성공");
         return new LoginResponse(user.get().getId(), accessToken, refreshToken);
     }
 
     // 로그아웃
     public void logout(HttpServletRequest httpServletRequest) {
 
+        log.warn("[AuthService] 로그아웃 로직을 시작합니다.");
         // HttpServletRequest에서 access 토큰 가져온 후 null 체크
         String accessToken = jwtTokenProvider.resolveRequestToToken(httpServletRequest);
         if (accessToken == null) {
+            log.warn("[AuthService] HttpServletRequest에 access 토큰이 존재하지 않습니다.");
             throw new CustomException(SecurityErrorCode.INVALID_ACCESS_TOKEN);
         }
         // access 토큰 유효성 검사 후 블랙리스트 처리
         try {
             if (jwtTokenProvider.validateToken(accessToken)) {
                 long expirationSeconds = jwtTokenProvider.getExpiration(accessToken);
-                log.info("access 토큰의 만료 시간 : {}", expirationSeconds);
                 if (expirationSeconds > 0) {
+                    log.info("[AuthService] access 토큰을 Redis의 blacklist 목록에 추가합니다.");
                     redisUtil.set(accessToken, "blacklisted", expirationSeconds, TimeUnit.SECONDS);
                 }
             }
@@ -127,6 +136,7 @@ public class AuthService {
     // 토큰 재발급
     public JwtResponse reissue(String refreshToken) {
 
+        log.warn("[AuthService] 토큰 재발급 로직을 시작합니다.");
         // refresh 토큰 유효성 검사
         if (!jwtTokenProvider.validateToken(refreshToken)) {
             throw new CustomException(SecurityErrorCode.INVALID_REFRESH_TOKEN);

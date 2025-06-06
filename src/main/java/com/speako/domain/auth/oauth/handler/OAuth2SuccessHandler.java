@@ -36,7 +36,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         CustomUserDetails customUserDetails = new CustomUserDetails(customOAuth2User.getUser());
 
         // JWT 발급
-        log.info("[OAuth2SuccessHandler] 사용자 ID : {} 로 access/refresh 토큰을 발급합니다.", customUserDetails.getId());
+        log.info("[OAuth2SuccessHandler] 로그인 계정에 대한 access/refresh 토큰을 발급합니다.");
         String accessToken = jwtTokenProvider.createJwtAccessToken(customUserDetails);
         String refreshToken = jwtTokenProvider.createJwtRefreshToken(customUserDetails);
         log.info("[OAuth2SuccessHandler] access/refresh 토큰 발급 성공");
