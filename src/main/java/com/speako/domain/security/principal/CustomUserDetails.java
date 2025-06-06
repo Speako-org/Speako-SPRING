@@ -1,6 +1,7 @@
-package com.speako.domain.security.adapter;
+package com.speako.domain.security.principal;
 
 import com.speako.domain.user.entity.User;
+import com.speako.domain.user.entity.enums.AuthProvider;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,11 +15,13 @@ public class CustomUserDetails implements UserDetails {
     private final Long id;
     private final String email;
     private final String password;
+    private final AuthProvider authProvider;
 
     public CustomUserDetails(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
+        this.authProvider = user.getAuthProvider();
     }
 
     public static CustomUserDetails toCustomUserDetails(User user) {
