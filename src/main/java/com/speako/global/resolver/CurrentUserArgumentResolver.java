@@ -1,7 +1,7 @@
 package com.speako.global.resolver;
 
 import com.speako.domain.auth.annotation.LoginUser;
-import com.speako.domain.security.adapter.CustomUserDetails;
+import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.domain.auth.exception.SecurityErrorCode;
 import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;

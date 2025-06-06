@@ -2,6 +2,8 @@ package com.speako.domain.user.converter;
 
 import com.speako.domain.auth.dto.reqDTO.SignupRequest;
 import com.speako.domain.user.entity.User;
+import com.speako.domain.user.entity.enums.AuthProvider;
+import com.speako.domain.user.entity.enums.UserGender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserConverter {
@@ -14,6 +16,18 @@ public class UserConverter {
                 .username(signupRequest.username())
                 .age(signupRequest.age())
                 .gender(signupRequest.gender())
+                .authProvider(AuthProvider.LOCAL)
+                .build();
+    }
+
+    public static User kakaoToUser(String email, String username, AuthProvider authProvider) {
+        return User.builder()
+                .email(email)
+                .password(null) // 로그인 인증에 사용될 일 없음
+                .username(username)
+                .age(null)
+                .gender(UserGender.OTHER)
+                .authProvider(authProvider)
                 .build();
     }
 }

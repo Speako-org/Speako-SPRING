@@ -1,5 +1,6 @@
 package com.speako.domain.user.entity;
 
+import com.speako.domain.user.entity.enums.AuthProvider;
 import com.speako.domain.user.entity.enums.UserGender;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,7 +26,7 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "username", nullable = false, length = 20)
@@ -37,6 +38,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
     private UserGender gender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider", nullable = false)
+    private AuthProvider authProvider;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

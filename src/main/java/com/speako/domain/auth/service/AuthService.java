@@ -5,7 +5,7 @@ import com.speako.domain.auth.dto.reqDTO.SignupRequest;
 import com.speako.domain.auth.dto.resDTO.JwtResponse;
 import com.speako.domain.auth.dto.resDTO.LoginResponse;
 import com.speako.domain.auth.exception.SecurityErrorCode;
-import com.speako.domain.security.adapter.CustomUserDetails;
+import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.domain.security.jwt.JwtTokenProvider;
 import com.speako.domain.user.converter.UserConverter;
 import com.speako.domain.user.entity.User;
@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -69,16 +70,16 @@ public class AuthService {
           2. TTL 갱신
           3. 에러 반환 (이메일/비번 중 어느것을 틀렸는지 유추하는 것을 막기 위해 에러 통일
         */
-        // 사용자 조회
-        User user = userRepository.findByEmail(loginRequest.email())
-                .orElseThrow(() -> {
-                    log.warn("Login failed for email: {}", loginRequest.email());
-                    redisUtil.increment(redisKey, duration);
-                    redisUtil.expire(redisKey, duration);
-                    return new CustomException(SecurityErrorCode.INVALID_EMAIL_OR_PASSWORD);
-                });
+        Optional<User> user = userRepository.findByEmail(loginRequest.email());
+        // 이메일 검증
+        if (user.isEmpty()) {
+            log.warn("Login failed for email: {}", loginRequest.email());
+            redisUtil.increment(redisKey, duration);
+            redisUtil.expire(redisKey, duration);
+            throw new CustomException(SecurityErrorCode.INVALID_EMAIL_OR_PASSWORD);
+        }
         // 비밀번호 검증
-        if (!bCryptPasswordEncoder.matches(loginRequest.password(), user.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(loginRequest.password(), user.get().getPassword())) {
             log.warn("Login failed for password: {}", loginRequest.password());
             redisUtil.increment(redisKey, duration);
             redisUtil.expire(redisKey, duration);
@@ -88,11 +89,11 @@ public class AuthService {
         redisUtil.delete(redisKey);
 
         // CustomUserDetails 객체 생성 및 Access/Refresh 토큰 발급
-        CustomUserDetails customUserDetails = CustomUserDetails.toCustomUserDetails(user);
+        CustomUserDetails customUserDetails = CustomUserDetails.toCustomUserDetails(user.get());
         String accessToken = jwtTokenProvider.createJwtAccessToken(customUserDetails);
         String refreshToken = jwtTokenProvider.createJwtRefreshToken(customUserDetails);
 
-        return new LoginResponse(user.getId(), accessToken, refreshToken);
+        return new LoginResponse(user.get().getId(), accessToken, refreshToken);
     }
 
     // 로그아웃

@@ -1,8 +1,7 @@
-package com.speako.domain.security.filter;
+package com.speako.domain.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.speako.domain.security.service.CustomUserDetailsService;
-import com.speako.domain.security.jwt.JwtTokenProvider;
+import com.speako.domain.security.principal.CustomUserDetailsService;
 import com.speako.global.apiPayload.CustomResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -29,6 +28,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        // 소셜 로그인 인증 흐름 중인 요청은 무시
+        String uri = request.getRequestURI();
+        if (uri.startsWith("/login/oauth2/") || uri.startsWith("/oauth2/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         // HttpServletRequest 에서 Token 추출
         String token = jwtTokenProvider.resolveRequestToToken(request);
         // 토큰이 존재하고 유효한지 판단

@@ -1,7 +1,7 @@
 package com.speako.domain.security.jwt;
 
 import com.speako.domain.auth.exception.SecurityErrorCode;
-import com.speako.domain.security.adapter.CustomUserDetails;
+import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.domain.user.repository.UserRepository;
 import com.speako.global.apiPayload.exception.CustomException;
 import com.speako.global.util.RedisUtil;

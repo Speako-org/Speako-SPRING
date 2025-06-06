@@ -1,9 +1,12 @@
 package com.speako.domain.security.config;
 
-import com.speako.domain.security.service.CustomUserDetailsService;
-import com.speako.domain.security.filter.JwtAuthenticationFilter;
+import com.speako.domain.security.jwt.JwtAuthenticationFilter;
 import com.speako.domain.security.handler.CustomAuthenticationEntryPoint;
+import com.speako.domain.auth.oauth.handler.OAuth2FailureHandler;
+import com.speako.domain.auth.oauth.handler.OAuth2SuccessHandler;
 import com.speako.domain.security.jwt.JwtTokenProvider;
+import com.speako.domain.auth.oauth.service.CustomOAuth2UserService;
+import com.speako.domain.security.principal.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +33,9 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomUserDetailsService customUserDetailsService;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -51,7 +57,10 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/api/auth/signup",
                                 "/api/auth/login",
-                                "/api/auth/reissue"
+                                "/api/auth/reissue",
+                                "/login/oauth2/**",
+                                "/oauth2/**"
+
                         ).permitAll()
                         // 지정 url 이외의 모든 요청은 인증 필요
                         .anyRequest().authenticated()
@@ -68,6 +77,13 @@ public class SecurityConfig {
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService),
                         UsernamePasswordAuthenticationFilter.class
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)  // 아래에서 정의
+                        )
+                        .successHandler(oAuth2SuccessHandler)
+                        .failureHandler(oAuth2FailureHandler)
                 );
         return http.build();
     }

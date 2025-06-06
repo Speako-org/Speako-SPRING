@@ -1,6 +1,5 @@
-package com.speako.domain.security.service;
+package com.speako.domain.security.principal;
 
-import com.speako.domain.security.adapter.CustomUserDetails;
 import com.speako.domain.user.entity.User;
 import com.speako.domain.user.exception.UserErrorCode;
 import com.speako.domain.user.repository.UserRepository;
