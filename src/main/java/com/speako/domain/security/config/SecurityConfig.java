@@ -95,6 +95,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(
                 "http://localhost:8080",
+                "http://localhost:8081",
                 "http://localhost:3000",
                 "https://speako.site"
         ));
