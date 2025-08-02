@@ -1,11 +1,11 @@
 package com.speako.integration;
 
-import com.speako.domain.analysis.entity.Analysis;
+import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
-import com.speako.domain.transcription.entity.Transcription;
+import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
-import com.speako.domain.user.entity.User;
-import com.speako.domain.user.entity.enums.UserGender;
+import com.speako.domain.user.domain.User;
+import com.speako.domain.user.domain.enums.UserGender;
 import com.speako.domain.user.repository.UserRepository;
 import com.speako.event.nlp.NlpCompletedEvent;
 import com.speako.event.nlp.NlpCompletedEventHandler;
@@ -13,7 +13,6 @@ import com.speako.event.stt.SttCompletedEvent;
 
 import com.speako.event.stt.SttCompletedEventHandler;
 import com.speako.external.nlp.NlpAnalyzeClient;
-import com.speako.external.nlp.NlpAnalyzeResponse;
 
 
 import org.junit.jupiter.api.*;
@@ -26,10 +25,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.speako.domain.transcription.entity.enums.TranscriptionStatus.*;
+import static com.speako.domain.transcription.domain.enums.TranscriptionStatus.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.awaitility.Awaitility.await;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest

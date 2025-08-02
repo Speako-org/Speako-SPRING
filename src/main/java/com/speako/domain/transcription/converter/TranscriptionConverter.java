@@ -1,7 +1,7 @@
 package com.speako.domain.transcription.converter;
 
 import com.speako.domain.transcription.dto.resDTO.TranscriptionResDTO;
-import com.speako.domain.transcription.entity.Transcription;
+import com.speako.domain.transcription.domain.Transcription;
 
 import java.util.List;
 

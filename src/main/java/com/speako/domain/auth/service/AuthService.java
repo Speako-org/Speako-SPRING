@@ -8,7 +8,7 @@ import com.speako.domain.auth.exception.SecurityErrorCode;
 import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.domain.security.jwt.JwtTokenProvider;
 import com.speako.domain.user.converter.UserConverter;
-import com.speako.domain.user.entity.User;
+import com.speako.domain.user.domain.User;
 import com.speako.domain.user.exception.UserErrorCode;
 import com.speako.domain.user.repository.UserRepository;
 import com.speako.global.apiPayload.exception.CustomException;

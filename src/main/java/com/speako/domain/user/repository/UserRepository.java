@@ -1,6 +1,6 @@
 package com.speako.domain.user.repository;
 
-import com.speako.domain.user.entity.User;
+import com.speako.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

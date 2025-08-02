@@ -1,17 +1,13 @@
 package com.speako.event.stt;
 
 import com.speako.domain.transcription.repository.TranscriptionRepository;
-import com.speako.event.nlp.NlpCompletedEvent;
 import com.speako.external.nlp.NlpAnalyzeClient;
-import com.speako.external.nlp.NlpAnalyzeResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import static com.speako.domain.transcription.entity.enums.TranscriptionStatus.ANALYSIS_FAIL;
 
 @Slf4j
 @Component

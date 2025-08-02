@@ -1,4 +1,4 @@
-package com.speako.domain.record.entity.enums;
+package com.speako.domain.record.domain.enums;
 
 public enum RecordStatus {
 

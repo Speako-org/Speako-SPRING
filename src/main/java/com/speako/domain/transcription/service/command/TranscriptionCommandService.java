@@ -1,9 +1,9 @@
 package com.speako.domain.transcription.service.command;
 
-import com.speako.domain.record.entity.Record;
+import com.speako.domain.record.domain.Record;
 import com.speako.domain.transcription.dto.reqDTO.TranscribeReqDTO;
-import com.speako.domain.transcription.entity.Transcription;
-import com.speako.domain.transcription.entity.enums.TranscriptionStatus;
+import com.speako.domain.transcription.domain.Transcription;
+import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
 import com.speako.domain.transcription.exception.TranscriptionErrorCode;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.external.aws.service.AwsS3Service;

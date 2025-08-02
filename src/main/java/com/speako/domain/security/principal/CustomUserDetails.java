@@ -1,7 +1,7 @@
 package com.speako.domain.security.principal;
 
-import com.speako.domain.user.entity.User;
-import com.speako.domain.user.entity.enums.AuthProvider;
+import com.speako.domain.user.domain.User;
+import com.speako.domain.user.domain.enums.AuthProvider;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

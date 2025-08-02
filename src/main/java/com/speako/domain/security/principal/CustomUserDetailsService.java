@@ -1,6 +1,6 @@
 package com.speako.domain.security.principal;
 
-import com.speako.domain.user.entity.User;
+import com.speako.domain.user.domain.User;
 import com.speako.domain.user.exception.UserErrorCode;
 import com.speako.domain.user.repository.UserRepository;
 import com.speako.global.apiPayload.exception.CustomException;

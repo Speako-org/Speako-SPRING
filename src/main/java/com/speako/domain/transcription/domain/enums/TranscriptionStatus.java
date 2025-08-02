@@ -1,4 +1,4 @@
-package com.speako.domain.transcription.entity.enums;
+package com.speako.domain.transcription.domain.enums;
 
 public enum TranscriptionStatus {
 

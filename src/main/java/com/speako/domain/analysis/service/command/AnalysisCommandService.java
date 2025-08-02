@@ -1,16 +1,16 @@
 package com.speako.domain.analysis.service.command;
 
 import com.speako.domain.analysis.dto.reqDTO.NlpAnalysisResult;
-import com.speako.domain.analysis.entity.Analysis;
+import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
-import com.speako.domain.transcription.entity.Transcription;
+import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.speako.domain.transcription.entity.enums.TranscriptionStatus.ANALYSIS_COMPLETED;
+import static com.speako.domain.transcription.domain.enums.TranscriptionStatus.ANALYSIS_COMPLETED;
 
 @Slf4j
 @Service

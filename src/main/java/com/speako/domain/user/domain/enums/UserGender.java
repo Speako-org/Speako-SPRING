@@ -1,4 +1,4 @@
-package com.speako.domain.user.entity.enums;
+package com.speako.domain.user.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

@@ -7,7 +7,6 @@ import com.speako.domain.analysis.service.query.AnalysisQueryService;
 import com.speako.global.apiPayload.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,12 +17,12 @@ public class AnalysisController {
     private final AnalysisQueryService analysisQueryService;
     private final AnalysisCommandService analysisCommandService;
 
-    @GetMapping("/analyses/{analysisId}")
+    @GetMapping("/transcription/{transcriptionId}/analyses")
     @Operation(method = "GET", summary = "분석 결과 조회 API", description = "녹음 기록의 분석 결과를 조회하는 API입니다.")
     public CustomResponse<AnalysisResponseDTO> getAnalysis(
-            @PathVariable(value = "analysisId") Long analysisId) {
+            @PathVariable(value = "transcriptionId") Long transcriptionId) {
 
-        AnalysisResponseDTO analysisResponseDTO = analysisQueryService.getAnalysis(analysisId);
+        AnalysisResponseDTO analysisResponseDTO = analysisQueryService.getAnalysis(transcriptionId);
         return CustomResponse.onSuccess(analysisResponseDTO);
     }
 

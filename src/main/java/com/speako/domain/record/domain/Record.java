@@ -1,7 +1,7 @@
-package com.speako.domain.record.entity;
+package com.speako.domain.record.domain;
 
-import com.speako.domain.record.entity.enums.RecordStatus;
-import com.speako.domain.user.entity.User;
+import com.speako.domain.record.domain.enums.RecordStatus;
+import com.speako.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -32,6 +32,9 @@ public class Record {
     @Column(name = "status", nullable = false)
     private RecordStatus recordStatus;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -44,5 +47,13 @@ public class Record {
     // s3Path 업데이트
     public void updateRecordS3Path(String s3Path) {
         this.s3Path = s3Path;
+    }
+
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
+
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
     }
 }

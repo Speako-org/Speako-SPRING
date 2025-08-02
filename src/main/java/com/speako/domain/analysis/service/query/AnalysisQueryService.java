@@ -3,10 +3,10 @@ package com.speako.domain.analysis.service.query;
 import com.speako.domain.analysis.converter.AnalysisConverter;
 import com.speako.domain.analysis.dto.resDTO.AnalysisResponseDTO;
 import com.speako.domain.analysis.dto.resDTO.DailyRatioOfRecent7Days;
-import com.speako.domain.analysis.entity.Analysis;
+import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.exception.AnalysisErrorCode;
 import com.speako.domain.analysis.repository.AnalysisRepository;
-import com.speako.domain.transcription.entity.Transcription;
+import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.exception.TranscriptionErrorCode;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.global.apiPayload.exception.CustomException;
@@ -32,12 +32,12 @@ public class AnalysisQueryService {
     private final TranscriptionRepository transcriptionRepository;
     private final AnalysisRepository analysisRepository;
 
-    public AnalysisResponseDTO getAnalysis(Long analysisId) {
+    public AnalysisResponseDTO getAnalysis(Long transcriptionId) {
 
-        Analysis analysis = analysisRepository.findById(analysisId)
-                .orElseThrow(() -> new CustomException(AnalysisErrorCode.ANALYSIS_NOT_FOUND));
-        Transcription transcription = transcriptionRepository.findById(analysis.getTranscription().getId())
+        Transcription transcription = transcriptionRepository.findById(transcriptionId)
                 .orElseThrow(() -> new CustomException(TranscriptionErrorCode.TRANSCRIPTION_NOT_FOUND));
+        Analysis analysis = analysisRepository.findByTranscriptionId(transcriptionId)
+                .orElseThrow(() -> new CustomException(AnalysisErrorCode.ANALYSIS_NOT_FOUND));
 
         /*
             아래 세가지 값들 중 자주 업데이트되지 않는 값은 DB에 저장될 수 있도록(쿼리 감소 목적) 구현하여 성능 개선하는 쪽도 생각해볼 것
