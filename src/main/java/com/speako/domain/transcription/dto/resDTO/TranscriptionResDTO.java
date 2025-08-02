@@ -1,6 +1,6 @@
 package com.speako.domain.transcription.dto.resDTO;
 
-import com.speako.domain.transcription.entity.enums.TranscriptionStatus;
+import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
 
 import java.time.LocalDateTime;
 

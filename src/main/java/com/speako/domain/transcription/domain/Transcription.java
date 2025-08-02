@@ -1,8 +1,8 @@
-package com.speako.domain.transcription.entity;
+package com.speako.domain.transcription.domain;
 
-import com.speako.domain.record.entity.Record;
-import com.speako.domain.transcription.entity.enums.TranscriptionStatus;
-import com.speako.domain.user.entity.User;
+import com.speako.domain.record.domain.Record;
+import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
+import com.speako.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -49,6 +49,9 @@ public class Transcription {
     @Column(name = "status", nullable = false)
     private TranscriptionStatus transcriptionStatus;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -66,5 +69,13 @@ public class Transcription {
     // thumbnailText 업데이트
     public void updateThumbnailText(String thumbnailText) {
         this.thumbnailText = thumbnailText;
+    }
+
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
+
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
     }
 }

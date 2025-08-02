@@ -3,7 +3,7 @@ package com.speako.domain.transcription.service.query;
 import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.domain.transcription.converter.TranscriptionConverter;
 import com.speako.domain.transcription.dto.resDTO.TranscriptionResDTO;
-import com.speako.domain.transcription.entity.Transcription;
+import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

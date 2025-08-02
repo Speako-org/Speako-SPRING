@@ -1,6 +1,6 @@
 package com.speako.domain.transcription.repository;
 
-import com.speako.domain.transcription.entity.Transcription;
+import com.speako.domain.transcription.domain.Transcription;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

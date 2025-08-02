@@ -1,9 +1,9 @@
 package com.speako.domain.analysis.service.command;
 
-import com.speako.domain.analysis.entity.Analysis;
+import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
-import com.speako.domain.transcription.entity.Transcription;
-import com.speako.domain.transcription.entity.enums.TranscriptionStatus;
+import com.speako.domain.transcription.domain.Transcription;
+import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.external.aws.service.AwsS3Service;
 import com.speako.global.config.AwsS3Config;
@@ -21,7 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.speako.domain.transcription.entity.enums.TranscriptionStatus.ANALYSIS_COMPLETED;
+import static com.speako.domain.transcription.domain.enums.TranscriptionStatus.ANALYSIS_COMPLETED;
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.mock;

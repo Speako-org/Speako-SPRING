@@ -1,9 +1,9 @@
 package com.speako.event.handler;
 
-import com.speako.domain.analysis.entity.Analysis;
+import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
-import com.speako.domain.transcription.entity.Transcription;
-import com.speako.domain.transcription.entity.enums.TranscriptionStatus;
+import com.speako.domain.transcription.domain.Transcription;
+import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.event.nlp.NlpCompletedEvent;
 import com.speako.event.nlp.NlpCompletedEventHandler;

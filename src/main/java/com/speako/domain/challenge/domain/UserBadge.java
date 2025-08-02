@@ -1,7 +1,7 @@
-package com.speako.domain.record.entity;
+package com.speako.domain.challenge.domain;
 
-import com.speako.domain.record.entity.enums.RecordStatus;
-import com.speako.domain.user.entity.User;
+import com.speako.domain.challenge.domain.enums.BadgeType;
+import com.speako.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,34 +15,30 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Record {
+public class UserBadge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
 
-    @Column(name = "s3_path", columnDefinition = "TEXT")
-    private String s3Path;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private RecordStatus recordStatus;
+    @Column(name = "badge_type", nullable = false, updatable = false)
+    private BadgeType badgeType;
+
+    @Column(nullable = false, updatable = false, length = 10)
+    private String title;
+
+    @Column(nullable = false, updatable = false, length = 10)
+    private String description;
+
+    @Column(name = "is_acquired", nullable = false)
+    private boolean isAcquired ;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    // recordStatus 업데이트 (상태 변경)
-    public void updateRecordStatus(RecordStatus recordStatus) {
-        this.recordStatus = recordStatus;
-    }
-
-    // s3Path 업데이트
-    public void updateRecordS3Path(String s3Path) {
-        this.s3Path = s3Path;
-    }
 }

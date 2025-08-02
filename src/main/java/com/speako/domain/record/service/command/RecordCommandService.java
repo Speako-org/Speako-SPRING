@@ -2,8 +2,8 @@ package com.speako.domain.record.service.command;
 
 import com.speako.domain.record.dto.resDTO.PresignedUrlResDTO;
 import com.speako.domain.record.dto.resDTO.RecordUploadResDTO;
-import com.speako.domain.record.entity.Record;
-import com.speako.domain.record.entity.enums.RecordStatus;
+import com.speako.domain.record.domain.Record;
+import com.speako.domain.record.domain.enums.RecordStatus;
 import com.speako.domain.record.exception.RecordErrorCode;
 import com.speako.domain.record.repository.RecordRepository;
 import com.speako.domain.transcription.service.command.TranscriptionCommandService;

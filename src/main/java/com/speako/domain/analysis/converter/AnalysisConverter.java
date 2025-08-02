@@ -2,8 +2,8 @@ package com.speako.domain.analysis.converter;
 
 import com.speako.domain.analysis.dto.resDTO.AnalysisResponseDTO;
 import com.speako.domain.analysis.dto.resDTO.DailyRatioOfRecent7Days;
-import com.speako.domain.analysis.entity.Analysis;
-import com.speako.domain.transcription.entity.Transcription;
+import com.speako.domain.analysis.domain.Analysis;
+import com.speako.domain.transcription.domain.Transcription;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

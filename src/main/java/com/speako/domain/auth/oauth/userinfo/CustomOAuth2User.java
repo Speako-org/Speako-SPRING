@@ -1,6 +1,6 @@
 package com.speako.domain.auth.oauth.userinfo;
 
-import com.speako.domain.user.entity.User;
+import com.speako.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
