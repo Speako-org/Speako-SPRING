@@ -1,6 +1,6 @@
 package com.speako.domain.challenge.domain.enums;
 
-public enum ChallengeLevel {
+public enum BadgeType {
 
     // 구현 필요
     TEMP

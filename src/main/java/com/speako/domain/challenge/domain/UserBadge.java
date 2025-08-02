@@ -1,5 +1,6 @@
 package com.speako.domain.challenge.domain;
 
+import com.speako.domain.challenge.domain.enums.BadgeType;
 import com.speako.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
