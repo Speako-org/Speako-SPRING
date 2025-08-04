@@ -48,4 +48,14 @@ public class Article {
         this.content = content;
         this.userBadge = userBadge;
     }
+
+    public void increaseLikedNum() {
+        this.likedNum++;
+    }
+
+    public void decreaseLikedNum() {
+        if(this.likedNum > 0) {
+            this.likedNum--;
+        }
+    }
 }

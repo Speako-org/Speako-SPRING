@@ -10,8 +10,14 @@ import java.util.List;
 public class ArticleConverter {
     public static GetArticleResDTO toGetArticleResDTO(Article article) {
         User user =  article.getUser();
-        UserBadge articleBadge = article.getUserBadge();
-        UserBadge mainBadge = user.getUserBadge();
+
+        UserBadge userBadge = article.getUserBadge();
+        Badge badge = userBadge.getBadge();
+
+        UserBadge mainUserBadge = user.getUserBadges().stream()
+                .filter(UserBadge::isMain)
+                .findFirst()
+                .orElse(null);
 
         return new GetArticleResDTO(
                 user.getId(),
@@ -19,10 +25,14 @@ public class ArticleConverter {
                 user.getUsername(),
                 user.getImageUrl(),
                 article.getCreatedAt(),
-                mainBadge != null ? mainBadge.getTitle() : null,
-                articleBadge != null ? articleBadge.getId() : null,
-                articleBadge != null ? articleBadge.getTitle() : null,
-                articleBadge != null ? articleBadge.getDescription() : null,
+
+                mainUserBadge != null ? mainUserBadge.getId() : null,
+                mainUserBadge != null ? mainUserBadge.getName() : null,
+
+                userBadge.getId(),
+                badge.getName(),
+                badge.getDescription(),
+
                 article.getContent(),
                 article.getLikedNum()
                 //article.getcommentNum()

@@ -8,10 +8,14 @@ public record GetArticleResDTO(
         String username,
         String ImageUrl,
         LocalDateTime createdAt,
+
+        Long mainBadgeId,
         String mainBadgeTitle,
+
         Long userBadgeId,
         String badgeTitle,
         String badgeDescription,
+
         String content,
         int likedNum
         //int commentNum
