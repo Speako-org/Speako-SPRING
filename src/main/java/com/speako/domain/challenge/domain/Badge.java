@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "challenges")
-public class Challenge {
+@Table(name = "badges")
+public class Badge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,15 +27,6 @@ public class Challenge {
 
     @Column(nullable = false)
     private Integer level;
-
-    @Column(name = "level_name", nullable = false, length = 20)
-    private String levelName;
-
-    @Column(name = "required_amount", nullable = false)
-    private Integer requiredAmount;
-
-    @Column(name = "sequence", nullable = false)
-    private Integer sequence;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

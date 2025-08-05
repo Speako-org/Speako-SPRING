@@ -1,6 +1,5 @@
 package com.speako.domain.challenge.domain;
 
-import com.speako.domain.challenge.domain.enums.BadgeType;
 import com.speako.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,28 +14,19 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Table(name = "user_badges")
 public class UserBadge {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "badge_type", nullable = false, updatable = false)
-    private BadgeType badgeType;
-
-    @Column(nullable = false, updatable = false, length = 10)
-    private String title;
-
-    @Column(nullable = false, updatable = false, length = 10)
-    private String description;
-
-    @Column(name = "is_acquired", nullable = false)
-    private boolean isAcquired ;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "badge_id", nullable = false)
+    private Badge badge;
 
     @Column(name = "is_main", nullable = false)
     private boolean isMain;

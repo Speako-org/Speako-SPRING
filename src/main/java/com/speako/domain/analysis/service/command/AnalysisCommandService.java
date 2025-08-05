@@ -3,6 +3,7 @@ package com.speako.domain.analysis.service.command;
 import com.speako.domain.analysis.dto.reqDTO.NlpAnalysisResult;
 import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
+import com.speako.domain.challenge.service.command.UserChallengeService;
 import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.domain.userinfo.service.command.UserInfoCommandService;
@@ -21,6 +22,7 @@ public class AnalysisCommandService {
     private final AnalysisRepository analysisRepository;
     private final TranscriptionRepository transcriptionRepository;
     private final UserInfoCommandService userInfoCommandService;
+    private final UserChallengeService userChallengeService;
 
     private Analysis saveAnalysis(Transcription transcription, NlpAnalysisResult result) {
         return analysisRepository.save(
@@ -44,10 +46,12 @@ public class AnalysisCommandService {
         // 2. 분석 결과 저장
         Analysis analysis = saveAnalysis(transcription, result);
 
+        log.info("[NLP 분석 완료] analysisId={} / transcriptionId={}", analysis.getId(), transcription.getId());
+      
         // updateUserInfo 호출 (내부에서 monthlyStat과 userAchievement 업데이트 수행
         userInfoCommandService.updateUserInfo(analysis);
 
-        log.info("[NLP 분석 완료] analysisId={} / transcriptionId={}", analysis.getId(), transcription.getId());
+        userChallengeService.updateChallengeProgress(transcription.getRecord().getUser(), analysis);
 
         //TODO: FCM
     }
