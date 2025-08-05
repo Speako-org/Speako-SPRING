@@ -5,6 +5,7 @@ import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
 import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
+import com.speako.domain.userinfo.service.command.UserInfoCommandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import static com.speako.domain.transcription.domain.enums.TranscriptionStatus.A
 public class AnalysisCommandService {
     private final AnalysisRepository analysisRepository;
     private final TranscriptionRepository transcriptionRepository;
+    private final UserInfoCommandService userInfoCommandService;
 
     private Analysis saveAnalysis(Transcription transcription, NlpAnalysisResult result) {
         return analysisRepository.save(
@@ -41,6 +43,9 @@ public class AnalysisCommandService {
 
         // 2. 분석 결과 저장
         Analysis analysis = saveAnalysis(transcription, result);
+
+        // updateUserInfo 호출 (내부에서 monthlyStat과 userAchievement 업데이트 수행
+        userInfoCommandService.updateUserInfo(analysis);
 
         log.info("[NLP 분석 완료] analysisId={} / transcriptionId={}", analysis.getId(), transcription.getId());
 

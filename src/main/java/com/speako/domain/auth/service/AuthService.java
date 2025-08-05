@@ -5,12 +5,15 @@ import com.speako.domain.auth.dto.reqDTO.SignupRequest;
 import com.speako.domain.auth.dto.resDTO.JwtResponse;
 import com.speako.domain.auth.dto.resDTO.LoginResponse;
 import com.speako.domain.auth.exception.SecurityErrorCode;
-import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.domain.security.jwt.JwtTokenProvider;
+import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.domain.user.converter.UserConverter;
 import com.speako.domain.user.domain.User;
 import com.speako.domain.user.exception.UserErrorCode;
 import com.speako.domain.user.repository.UserRepository;
+import com.speako.domain.userinfo.converter.UserAchievementConverter;
+import com.speako.domain.userinfo.domain.UserAchievement;
+import com.speako.domain.userinfo.repository.UserAchievementRepository;
 import com.speako.global.apiPayload.exception.CustomException;
 import com.speako.global.util.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -31,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final UserAchievementRepository userAchievementRepository;
+//    private final UserChallengeService userChallengeService;
     private final RedisUtil redisUtil;
     private final JwtTokenProvider jwtTokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -45,6 +50,16 @@ public class AuthService {
             throw new CustomException(UserErrorCode.USER_EMAIL_ALREADY_EXISTS);
         }
         User user = userRepository.save(UserConverter.toUser(signupRequest, bCryptPasswordEncoder));
+
+        // UserAchievement Initialize
+//        int totalBadgeCount = badgeService.countInitialBadgesFor(user); -> 총 Badge 종류 수 카운트
+        int totalBadgeCount = 20; // TODO 총 뱃지 수 임시 하드코딩, 삭제 필요
+        UserAchievement userAchievement = UserAchievementConverter.toUserAchievement(user, totalBadgeCount);
+        userAchievementRepository.save(userAchievement);
+
+        // Challenge Initialize
+//        userChallengeService.initializeUserChallenges(user); // TODO challenge 코드 머지 후 주석 풀기
+
         log.info("[AuthService] 회원가입 완료");
         return user.getId();
     }

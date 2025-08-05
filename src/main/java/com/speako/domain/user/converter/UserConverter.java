@@ -3,6 +3,7 @@ package com.speako.domain.user.converter;
 import com.speako.domain.auth.dto.reqDTO.SignupRequest;
 import com.speako.domain.user.domain.User;
 import com.speako.domain.user.domain.enums.AuthProvider;
+import com.speako.domain.user.domain.enums.ImageType;
 import com.speako.domain.user.domain.enums.UserGender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -16,6 +17,7 @@ public class UserConverter {
                 .username(signupRequest.username())
                 .age(signupRequest.age())
                 .gender(signupRequest.gender())
+                .imageType(ImageType.DEFAULT)
                 .authProvider(AuthProvider.LOCAL)
                 .build();
     }
