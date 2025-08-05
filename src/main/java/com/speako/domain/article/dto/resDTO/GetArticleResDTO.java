@@ -17,7 +17,7 @@ public record GetArticleResDTO(
         String badgeDescription,
 
         String content,
-        int likedNum
-        //int commentNum
+        int likedNum,
+        int commentNum
 ) {
 }

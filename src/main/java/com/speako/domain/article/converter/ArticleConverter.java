@@ -6,18 +6,15 @@ import com.speako.domain.challenge.domain.UserBadge;
 import com.speako.domain.user.domain.User;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public class ArticleConverter {
-    public static GetArticleResDTO toGetArticleResDTO(Article article) {
+    public static GetArticleResDTO toGetArticleResDTO(Article article, UserBadge mainBadge,  int commentNum) {
         User user =  article.getUser();
 
         UserBadge userBadge = article.getUserBadge();
         Badge badge = userBadge.getBadge();
-
-        UserBadge mainUserBadge = user.getUserBadges().stream()
-                .filter(UserBadge::isMain)
-                .findFirst()
-                .orElse(null);
 
         return new GetArticleResDTO(
                 user.getId(),
@@ -26,22 +23,31 @@ public class ArticleConverter {
                 user.getImageUrl(),
                 article.getCreatedAt(),
 
-                mainUserBadge != null ? mainUserBadge.getId() : null,
-                mainUserBadge != null ? mainUserBadge.getName() : null,
+                mainBadge != null ? mainBadge.getId() : null,
+                mainBadge != null ? mainBadge.getName() : null,
 
                 userBadge.getId(),
                 badge.getName(),
                 badge.getDescription(),
 
                 article.getContent(),
-                article.getLikedNum()
-                //article.getcommentNum()
+                article.getLikedNum(),
+                commentNum
         );
     }
 
-    public static List<GetArticleResDTO> toGetArticleResDTOList(List<Article> articles) {
+    public static List<GetArticleResDTO> toGetArticleResDTOList(
+            List<Article> articles,
+            Function<Long, UserBadge> mainBadgeProvider,
+            Map<Long, Integer> commentNumMap
+    ) {
         return articles.stream()
-                .map(ArticleConverter::toGetArticleResDTO)
+                .map(article -> {
+                    Long userId = article.getUser().getId();
+                    UserBadge mainBadge = mainBadgeProvider.apply(userId);
+                    int commentNum = commentNumMap.getOrDefault(article.getId(),0);
+                    return toGetArticleResDTO(article, mainBadge, commentNum);
+                })
                 .toList();
     }
 }
