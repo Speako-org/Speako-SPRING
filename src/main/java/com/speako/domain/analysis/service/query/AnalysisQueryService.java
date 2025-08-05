@@ -7,6 +7,7 @@ import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.exception.AnalysisErrorCode;
 import com.speako.domain.analysis.repository.AnalysisRepository;
 import com.speako.domain.transcription.domain.Transcription;
+import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
 import com.speako.domain.transcription.exception.TranscriptionErrorCode;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.global.apiPayload.exception.CustomException;
@@ -36,6 +37,10 @@ public class AnalysisQueryService {
 
         Transcription transcription = transcriptionRepository.findById(transcriptionId)
                 .orElseThrow(() -> new CustomException(TranscriptionErrorCode.TRANSCRIPTION_NOT_FOUND));
+        // 분석이 완료된 상태가 아닐 시 에러 발생 (분석이 완료된 기록만 조회 가능)
+        if (transcription.getTranscriptionStatus() != TranscriptionStatus.ANALYSIS_COMPLETED) {
+            throw new CustomException(TranscriptionErrorCode.ANALYSIS_NOT_COMPLETED);
+        }
         Analysis analysis = analysisRepository.findByTranscriptionId(transcriptionId)
                 .orElseThrow(() -> new CustomException(AnalysisErrorCode.ANALYSIS_NOT_FOUND));
 

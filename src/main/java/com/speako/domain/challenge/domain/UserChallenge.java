@@ -66,10 +66,6 @@ public class UserChallenge {
         return amount >= challenge.getRequiredAmount();
     }
 
-    public boolean isConsecutiveChallenge() {
-        return challenge.getName().equals("연속 기록");
-    }
-
     public boolean isTodayRecorded(LocalDate today) {
         return lastRecordDate != null && lastRecordDate.equals(today);
     }
