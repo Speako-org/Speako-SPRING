@@ -2,6 +2,8 @@ package com.speako.event.nlp;
 
 import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.repository.AnalysisRepository;
+import com.speako.domain.challenge.service.command.UserChallengeService;
+import com.speako.domain.challenge.service.command.UserChallengeServiceImpl;
 import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
