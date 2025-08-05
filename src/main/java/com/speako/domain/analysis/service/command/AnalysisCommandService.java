@@ -6,6 +6,7 @@ import com.speako.domain.analysis.repository.AnalysisRepository;
 import com.speako.domain.challenge.service.command.UserChallengeService;
 import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
+import com.speako.domain.userinfo.service.command.UserInfoCommandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import static com.speako.domain.transcription.domain.enums.TranscriptionStatus.A
 public class AnalysisCommandService {
     private final AnalysisRepository analysisRepository;
     private final TranscriptionRepository transcriptionRepository;
+    private final UserInfoCommandService userInfoCommandService;
     private final UserChallengeService userChallengeService;
 
     private Analysis saveAnalysis(Transcription transcription, NlpAnalysisResult result) {
@@ -45,6 +47,9 @@ public class AnalysisCommandService {
         Analysis analysis = saveAnalysis(transcription, result);
 
         log.info("[NLP 분석 완료] analysisId={} / transcriptionId={}", analysis.getId(), transcription.getId());
+      
+        // updateUserInfo 호출 (내부에서 monthlyStat과 userAchievement 업데이트 수행
+        userInfoCommandService.updateUserInfo(analysis);
 
         userChallengeService.updateChallengeProgress(transcription.getRecord().getUser(), analysis);
 

@@ -1,8 +1,9 @@
 package com.speako.domain.user.domain;
 
-import com.speako.domain.challenge.domain.UserBadge;
 import com.speako.domain.user.domain.enums.AuthProvider;
+import com.speako.domain.user.domain.enums.ImageType;
 import com.speako.domain.user.domain.enums.UserGender;
+import com.speako.domain.userinfo.domain.UserAchievement;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -40,16 +41,16 @@ public class User {
     @Column(name = "gender", nullable = false)
     private UserGender gender;
 
-    @Column(name = "image_url", updatable = false)
-    private String imageUrl;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "main_badge_id")
-    private UserBadge userBadge;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "image_type", nullable = false)
+    private ImageType imageType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_provider", nullable = false)
     private AuthProvider authProvider;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserAchievement userAchievement;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
@@ -61,4 +62,8 @@ public class User {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public void updateImageType(ImageType imageType) {
+        this.imageType = imageType;
+    }
 }

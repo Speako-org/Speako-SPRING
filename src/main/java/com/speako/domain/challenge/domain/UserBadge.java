@@ -28,7 +28,14 @@ public class UserBadge {
     @JoinColumn(name = "badge_id", nullable = false)
     private Badge badge;
 
+    @Column(name = "is_main", nullable = false)
+    private boolean isMain;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    public void updateIsMain(boolean isMain) {
+        this.isMain = isMain;
+    }
 }
