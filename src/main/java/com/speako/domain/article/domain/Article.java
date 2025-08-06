@@ -1,5 +1,6 @@
 package com.speako.domain.article.domain;
 
+import com.speako.domain.challenge.domain.UserBadge;
 import com.speako.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,11 +26,15 @@ public class Article {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
 
-    @Column(nullable = false, updatable = false, length = 200)
+    @Column(nullable = false, length = 200)
     private String content;
 
     @Column(name = "liked_num", nullable = false)
     private int likedNum;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_badge_id", nullable = false)
+    private UserBadge userBadge;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -38,4 +43,22 @@ public class Article {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public void updateBadge(UserBadge userBadge) {
+        this.userBadge = userBadge;
+    }
+
+    public void updateContent(String content){
+        this.content = content;
+    }
+
+    public void increaseLikedNum() {
+        this.likedNum++;
+    }
+
+    public void decreaseLikedNum() {
+        if(this.likedNum > 0) {
+            this.likedNum--;
+        }
+    }
 }
