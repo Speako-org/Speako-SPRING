@@ -1,17 +1,18 @@
 package com.speako.domain.article.service.query;
-// query - 조회 서비스 (get, find, search)
-
 
 import com.speako.domain.article.converter.ArticleConverter;
 import com.speako.domain.article.domain.Article;
+import com.speako.domain.article.dto.reqDTO.CursorPageRequest;
 import com.speako.domain.article.dto.resDTO.GetArticleResDTO;
 import com.speako.domain.article.exception.ArticleErrorCode;
 import com.speako.domain.article.repository.ArticleRepository;
 import com.speako.domain.article.repository.CommentRepository;
+import com.speako.domain.challenge.domain.Badge;
 import com.speako.domain.challenge.domain.UserBadge;
 import com.speako.domain.challenge.repository.UserBadgeRepository;
 import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.speako.domain.article.converter.ArticleConverter.toGetArticleResDTO;
-import static com.speako.domain.article.converter.ArticleConverter.toGetArticleResDTOList;
 
 @Service
 @RequiredArgsConstructor
@@ -31,17 +31,33 @@ public class ArticleQueryService {
     private final UserBadgeRepository userBadgeRepository;
     private final CommentRepository commentRepository;
 
-    public List<GetArticleResDTO> getAllArticles(){
-        List<Article> articles = articleRepository.findAllByOrderByCreatedAtDesc();
+    public List<GetArticleResDTO> getAllArticles(CursorPageRequest pageRequest){
+
+        Long lastArticleId = pageRequest.cursorId();
+        int size = pageRequest.size();
+
+        List<Article> articles;
+
+        if(lastArticleId == null){
+            articles = articleRepository.findTopNOrderByIdDesc(PageRequest.of(0, size));
+        } else {
+            articles = articleRepository.findByIdLessThanOrderByIdDesc(lastArticleId, PageRequest.of(0, size));
+        }
+
         List<Long> articleIds = articles.stream()
                 .map(Article::getId)
                 .toList();
 
-        Map<Long, Long> commentNumMap = commentRepository.countByArticleIdIn(articleIds).entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().intValue()));
+        Map<Long, Integer> commentNumMap = commentRepository.countByArticleIdIn(articleIds).stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> ((Long) row[1]).intValue()
+                ));
 
-        Function<Long, UserBadge> mainBadgeProvider = userId ->
-                userBadgeRepository.findByUserIdAndIsMain(userId).orElse(null);
+        Function<Long, Badge> mainBadgeProvider = userId ->
+                userBadgeRepository.findByUserIdAndIsMain(userId)
+                        .map(UserBadge::getBadge)
+                        .orElse(null);
 
         return ArticleConverter.toGetArticleResDTOList(articles, mainBadgeProvider, commentNumMap);
     }
@@ -52,7 +68,7 @@ public class ArticleQueryService {
 
         Long authorId = article.getUser().getId();
 
-        UserBadge mainBadge = userBadgeRepository.findByUserIdAndIsMain(authorId)
+        Badge mainBadge = userBadgeRepository.findByUserIdAndIsMain(authorId)
                 .map(UserBadge::getBadge)
                 .orElse(null);
 

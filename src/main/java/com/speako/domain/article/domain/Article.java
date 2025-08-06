@@ -44,9 +44,12 @@ public class Article {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public void updateArticle(String content, UserBadge userBadge) {
-        this.content = content;
+    public void updateBadge(UserBadge userBadge) {
         this.userBadge = userBadge;
+    }
+
+    public void updateContent(String content){
+        this.content = content;
     }
 
     public void increaseLikedNum() {

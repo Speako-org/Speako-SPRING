@@ -5,7 +5,6 @@ import com.speako.domain.article.domain.Like;
 import com.speako.domain.article.exception.ArticleErrorCode;
 import com.speako.domain.article.repository.ArticleRepository;
 import com.speako.domain.article.repository.LikeRepository;
-import com.speako.domain.article.service.query.ArticleQueryService;
 import com.speako.domain.user.domain.User;
 import com.speako.domain.user.repository.UserRepository;
 import com.speako.global.apiPayload.exception.CustomException;
@@ -46,13 +45,12 @@ public class ArticleLikeCommandService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new CustomException(ArticleErrorCode.ARTICLE_NOT_FOUND));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ArticleErrorCode.USER_NOT_FOUND));
-
         if(!likeRepository.existsByUserIdAndArticleId(userId, articleId)) {
             throw new CustomException(ArticleErrorCode.LIKE_NOT_FOUND);
         }
+
         article.decreaseLikedNum();
+
         likeRepository.deleteByUserIdAndArticleId(userId, articleId);
     }
 }

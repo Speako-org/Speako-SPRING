@@ -1,10 +1,10 @@
 package com.speako.domain.article.service.command;
-// command - 명령서비스 (create, update, delete)
 
 import com.speako.domain.article.domain.Article;
 import com.speako.domain.article.dto.reqDTO.ArticleContentReqDTO;
 import com.speako.domain.article.exception.ArticleErrorCode;
 import com.speako.domain.article.repository.ArticleRepository;
+import com.speako.domain.article.repository.CommentRepository;
 import com.speako.domain.challenge.domain.UserBadge;
 import com.speako.domain.challenge.repository.UserBadgeRepository;
 import com.speako.domain.user.domain.User;
@@ -22,6 +22,7 @@ public class ArticleCommandService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final UserBadgeRepository userBadgeRepository;
+    private final CommentRepository commentRepository;
 
     public void createArticle(Long userId, ArticleContentReqDTO dto){
         User user = userRepository.findById(userId)
@@ -47,6 +48,8 @@ public class ArticleCommandService {
         if (!article.getUser().getId().equals(userId)) {
             throw new CustomException(ArticleErrorCode.FORBIDDEN);
         }
+        commentRepository.deleteByArticleId(articleId);
+
         articleRepository.delete(article);
     }
 
@@ -57,9 +60,17 @@ public class ArticleCommandService {
             throw new CustomException(ArticleErrorCode.FORBIDDEN);
         }
 
-        UserBadge userBadge = userBadgeRepository.findById(dto.userBadgeId())
-                .orElseThrow(() -> new CustomException(ArticleErrorCode.BAD_REQUEST));
+        if(dto.content() != null) {
+            article.updateContent(dto.content());
+        }
 
-        article.updateArticle(dto.content(), userBadge);
+        if(dto.userBadgeId() != null) {
+            UserBadge userBadge = userBadgeRepository.findById(dto.userBadgeId())
+                    .orElseThrow(() -> new CustomException(ArticleErrorCode.BAD_REQUEST));
+
+            article.updateBadge(userBadge);
+        }
+
+        articleRepository.save(article);
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface UserBadgeRepository extends JpaRepository<UserBadge, Long> {
 
-    @Query("SELECT ub FROM UserBadge ub WHERE ub.user.id = :userId AND ub.isMain = true")
+    @Query("SELECT ub FROM UserBadge ub JOIN FETCH ub.badge WHERE ub.user.id = :userId AND ub.isMain = true")
     Optional<UserBadge> findByUserIdAndIsMain(@Param("userId") Long userId);
 
     boolean existsByUserAndBadge(User user, Badge badge);

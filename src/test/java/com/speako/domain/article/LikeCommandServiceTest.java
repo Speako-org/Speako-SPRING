@@ -1,12 +1,12 @@
 package com.speako.domain.article;
 
 import com.speako.domain.article.domain.Article;
-import com.speako.domain.article.dto.reqDTO.ArticleContentReqDTO;
+import com.speako.domain.article.domain.Like;
 import com.speako.domain.article.repository.ArticleRepository;
-import com.speako.domain.article.service.command.ArticleCommandService;
+import com.speako.domain.article.repository.LikeRepository;
+import com.speako.domain.article.service.command.ArticleLikeCommandService;
 import com.speako.domain.challenge.domain.Badge;
 import com.speako.domain.challenge.domain.UserBadge;
-import com.speako.domain.challenge.repository.UserBadgeRepository;
 import com.speako.domain.user.domain.User;
 import com.speako.domain.user.domain.enums.ImageType;
 import com.speako.domain.user.repository.UserRepository;
@@ -19,10 +19,11 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-public class ArticleCommandServiceTest {
+public class LikeCommandServiceTest {
+
     @Mock
     private ArticleRepository articleRepository;
 
@@ -30,10 +31,10 @@ public class ArticleCommandServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private UserBadgeRepository userBadgeRepository;
+    private LikeRepository likeRepository;
 
     @InjectMocks
-    private ArticleCommandService articleCommandService;
+    private ArticleLikeCommandService articleLikeCommandService;
 
     @BeforeEach
     void setUp() {
@@ -41,18 +42,13 @@ public class ArticleCommandServiceTest {
     }
 
     @Test
-    @DisplayName("게시글 생성 성공")
-    void createArticleSuccess() {
-        Long userId = 1L;
-        Long userBadgeId = 10L;
-        String content = "테스트 글";
-
+    @DisplayName("좋아요 생성")
+    void createLikeSuccess() {
         User user = User.builder()
                 .id(1L)
                 .username("testUser")
                 .imageType(ImageType.DEFAULT)
                 .build();
-
 
         Badge badge = Badge.builder()
                 .id(1L)
@@ -68,83 +64,73 @@ public class ArticleCommandServiceTest {
                 .isMain(true)
                 .build();
 
-        ArticleContentReqDTO dto = new ArticleContentReqDTO(userBadgeId, content);
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(userBadgeRepository.findById(userBadgeId)).thenReturn(Optional.of(userBadge));
-
-        articleCommandService.createArticle(userId, dto);
-
-        verify(articleRepository, times(1)).save(any(Article.class));
-    }
-
-    @Test
-    @DisplayName("게시글 삭제 성공")
-    void deleteArticleSuccess() {
-        Long userId = 1L;
-        Long articleId = 100L;
-
-        User user = User.builder()
-                .id(userId)
-                .build();
-
         Article article = Article.builder()
-                .id(articleId)
+                .id(1L)
+                .content("Content 1")
                 .user(user)
-                .build();
-
-        when(articleRepository.findById(articleId)).thenReturn(Optional.of(article));
-
-        articleCommandService.deleteArticle(userId, articleId);
-
-        verify(articleRepository, times(1)).delete(article);
-    }
-
-    @Test
-    @DisplayName("게시글 수정 성공")
-    void updateArticleSuccess() {
-        Long userId = 1L;
-        Long articleId = 1L;
-        Long badgeId = 1L;
-
-        User user = User.builder()
-                .id(userId)
-                .username("testUser")
-                .imageType(ImageType.DEFAULT)
-                .build();
-
-        Badge badge = Badge.builder()
-                .id(badgeId)
-                .name("Test Badge")
-                .description("설명")
-                .level(1)
-                .build();
-
-        UserBadge userBadge = UserBadge.builder()
-                .id(badgeId)
-                .user(user)
-                .badge(badge)
-                .isMain(true)
-                .build();
-
-        Article article = Article.builder()
-                .id(articleId)
-                .user(user)
-                .content("테스트 게시글")
-                .likedNum(0)
                 .userBadge(userBadge)
+                .likedNum(0)
                 .build();
 
-        ArticleContentReqDTO dto = new ArticleContentReqDTO(badgeId, "수정된 내용");
+        Long userId = user.getId();
+        Long articleId = article.getId();
 
         when(articleRepository.findById(articleId)).thenReturn(Optional.of(article));
-        when(userBadgeRepository.findById(badgeId)).thenReturn(Optional.of(userBadge));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        articleCommandService.updateArticle(userId, articleId, dto);
+        when(likeRepository.existsByUserIdAndArticleId(userId, articleId)).thenReturn(false);
 
-        assertThat(article.getContent()).isEqualTo("수정된 내용");
-        assertThat(article.getUserBadge()).isEqualTo(userBadge);
+        articleLikeCommandService.likeArticle(articleId, userId);
 
-        verify(articleRepository, times(1)).save(article);
+        assertThat(article.getLikedNum()).isEqualTo(1);
+        verify(likeRepository, times(1)).save(any(Like.class));
+    }
+
+    @Test
+    @DisplayName("좋아요 취소 성공")
+    void unlikeArticleSuccess() {
+
+        User user = User.builder()
+                .id(1L)
+                .username("testUser")
+                .imageType(ImageType.DEFAULT)
+                .build();
+
+        Badge badge = Badge.builder()
+                .id(1L)
+                .name("Test Badge")
+                .description("설명")
+                .level(1)
+                .build();
+
+        UserBadge userBadge = UserBadge.builder()
+                .id(1L)
+                .user(user)
+                .badge(badge)
+                .isMain(true)
+                .build();
+
+        Article article = Article.builder()
+                .id(1L)
+                .content("Content 1")
+                .user(user)
+                .userBadge(userBadge)
+                .likedNum(1)
+                .build();
+
+        Like like = Like.builder()
+                .id(1L)
+                .article(article)
+                .user(user)
+                .build();
+
+        when(articleRepository.findById(1L)).thenReturn(Optional.of(article));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(likeRepository.existsByUserIdAndArticleId(1L, 1L)).thenReturn(true);
+
+        articleLikeCommandService.unlikeArticle(1L, 1L);
+
+        assertThat(article.getLikedNum()).isEqualTo(0);
+        verify(likeRepository, times(1)).deleteByUserIdAndArticleId(1L, 1L);
     }
 }
