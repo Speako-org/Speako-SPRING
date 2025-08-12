@@ -2,6 +2,7 @@ package com.speako.domain.article;
 
 import com.speako.domain.article.domain.Article;
 import com.speako.domain.article.dto.reqDTO.CursorPageRequest;
+import com.speako.domain.article.dto.resDTO.CursorPageResDTO;
 import com.speako.domain.article.dto.resDTO.GetArticleResDTO;
 import com.speako.domain.article.repository.ArticleRepository;
 import com.speako.domain.article.repository.CommentRepository;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.StatusResultMatchersExtensionsKt.isEqualTo;
 
 public class ArticleQueryServiceTest {
     @Mock
@@ -102,9 +104,11 @@ public class ArticleQueryServiceTest {
                 .thenReturn(2);
 
         CursorPageRequest pageRequest = new CursorPageRequest(null, 10);
-        List<GetArticleResDTO> result = articleQueryService.getAllArticles(pageRequest);
+        CursorPageResDTO<GetArticleResDTO> result = articleQueryService.getAllArticles(pageRequest);
 
-        assertThat(result).hasSize(2);
+        assertThat(result.content()).hasSize(2);
+        assertThat(result.hasNext()).isFalse();
+        assertThat(result.nextCursorId()).isEqualTo(1L);
         verify(articleRepository, times(1)).findTopNOrderByIdDesc(any());
         verify(userBadgeRepository, atLeastOnce()).findByUserIdAndIsMain(anyLong());
     }

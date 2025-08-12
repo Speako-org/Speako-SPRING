@@ -3,6 +3,7 @@ package com.speako.domain.article;
 import com.speako.domain.article.domain.Comment;
 import com.speako.domain.article.dto.reqDTO.CursorPageRequest;
 import com.speako.domain.article.dto.resDTO.CommentResDTO;
+import com.speako.domain.article.dto.resDTO.CursorPageResDTO;
 import com.speako.domain.article.repository.CommentRepository;
 import com.speako.domain.article.service.query.CommentQueryService;
 import com.speako.domain.challenge.domain.Badge;
@@ -86,12 +87,14 @@ public class CommentQueryServiceTest {
         when(userBadgeRepository.findByUserIdAndIsMain(user.getId()))
                 .thenReturn(Optional.of(userBadge));
 
-        List<CommentResDTO> result = commentQueryService.getCommentsByArticleId(
+        CursorPageResDTO<CommentResDTO> result = commentQueryService.getCommentsByArticleId(
                 articleId,
                 new CursorPageRequest(cursorId, size)
         );
 
-        assertThat(result).hasSize(2);
+        assertThat(result.content()).hasSize(2);
+        assertThat(result.hasNext()).isFalse();
+        assertThat(result.nextCursorId()).isEqualTo(2L);
         verify(commentRepository, times(1)).findByArticleIdWithCursor(eq(articleId), any(), any(PageRequest.class));
         verify(userBadgeRepository, atLeastOnce()).findByUserIdAndIsMain(user.getId());
     }
