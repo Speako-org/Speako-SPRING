@@ -3,6 +3,7 @@ package com.speako.domain.article.service.query;
 import com.speako.domain.article.converter.ArticleConverter;
 import com.speako.domain.article.domain.Article;
 import com.speako.domain.article.dto.reqDTO.CursorPageRequest;
+import com.speako.domain.article.dto.resDTO.CursorPageResDTO;
 import com.speako.domain.article.dto.resDTO.GetArticleResDTO;
 import com.speako.domain.article.exception.ArticleErrorCode;
 import com.speako.domain.article.repository.ArticleRepository;
@@ -13,6 +14,7 @@ import com.speako.domain.challenge.repository.UserBadgeRepository;
 import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,17 +33,23 @@ public class ArticleQueryService {
     private final UserBadgeRepository userBadgeRepository;
     private final CommentRepository commentRepository;
 
-    public List<GetArticleResDTO> getAllArticles(CursorPageRequest pageRequest){
+    public CursorPageResDTO<GetArticleResDTO> getAllArticles(CursorPageRequest pageRequest){
 
         Long lastArticleId = pageRequest.cursorId();
         int size = pageRequest.size();
 
+        Pageable pageable = PageRequest.of(0, size+1);
         List<Article> articles;
 
         if(lastArticleId == null){
-            articles = articleRepository.findTopNOrderByIdDesc(PageRequest.of(0, size));
+            articles = articleRepository.findTopNOrderByIdDesc(pageable);
         } else {
-            articles = articleRepository.findByIdLessThanOrderByIdDesc(lastArticleId, PageRequest.of(0, size));
+            articles = articleRepository.findByIdLessThanOrderByIdDesc(lastArticleId, pageable);
+        }
+
+        boolean hasNext = articles.size() > size;
+        if(hasNext){
+            articles = articles.subList(0, size);
         }
 
         List<Long> articleIds = articles.stream()
@@ -59,7 +67,13 @@ public class ArticleQueryService {
                         .map(UserBadge::getBadge)
                         .orElse(null);
 
-        return ArticleConverter.toGetArticleResDTOList(articles, mainBadgeProvider, commentNumMap);
+        List<GetArticleResDTO> dtoList = ArticleConverter.toGetArticleResDTOList(
+                articles, mainBadgeProvider, commentNumMap
+        );
+
+        Long nextCursorId = dtoList.isEmpty() ? null : dtoList.get(dtoList.size() - 1).articleId();
+
+        return new CursorPageResDTO<>(dtoList, nextCursorId, hasNext);
     }
 
     public GetArticleResDTO getArticle(Long articleId){

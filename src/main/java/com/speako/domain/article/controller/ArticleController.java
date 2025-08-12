@@ -2,6 +2,7 @@ package com.speako.domain.article.controller;
 
 import com.speako.domain.article.dto.reqDTO.ArticleContentReqDTO;
 import com.speako.domain.article.dto.reqDTO.CursorPageRequest;
+import com.speako.domain.article.dto.resDTO.CursorPageResDTO;
 import com.speako.domain.article.dto.resDTO.GetArticleResDTO;
 import com.speako.domain.article.service.command.ArticleCommandService;
 import com.speako.domain.article.service.query.ArticleQueryService;
@@ -26,15 +27,14 @@ public class ArticleController {
 
     @GetMapping("/list")
     @Operation(method = "GET", summary = "Article 전체 조회 API", description = "모든 Article을 조회하는 API입니다.")
-    public CustomResponse<List<GetArticleResDTO>> getArticlesList(
+    public CustomResponse<CursorPageResDTO<GetArticleResDTO>> getArticlesList(
             @Parameter(description = "조회 시작 커서 ID, null이면 처음부터 조회")
             @RequestParam(required = false) Long cursorId,
             @Parameter(description = "한 번에 조회할 게시글 개수 (기본값 10)")
             @RequestParam(defaultValue = "10") int size
     ){
         CursorPageRequest pageRequest = new CursorPageRequest(cursorId, size);
-        List<GetArticleResDTO> articles = articleQueryService.getAllArticles(pageRequest);
-        return CustomResponse.onSuccess(articles);
+        return CustomResponse.onSuccess(articleQueryService.getAllArticles(pageRequest));
     }
 
 

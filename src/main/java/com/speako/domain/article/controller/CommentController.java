@@ -3,6 +3,7 @@ package com.speako.domain.article.controller;
 import com.speako.domain.article.dto.reqDTO.CommentReqDTO;
 import com.speako.domain.article.dto.reqDTO.CursorPageRequest;
 import com.speako.domain.article.dto.resDTO.CommentResDTO;
+import com.speako.domain.article.dto.resDTO.CursorPageResDTO;
 import com.speako.domain.article.service.command.CommentCommandService;
 import com.speako.domain.article.service.query.CommentQueryService;
 import com.speako.domain.auth.annotation.LoginUser;
@@ -35,7 +36,7 @@ public class CommentController {
 
     @GetMapping("/{articleId}")
     @Operation(summary = "댓글 목록 조회 API", description = "특정 게시글의 댓글 목록을 커서 기반으로 조회하는 API입니다.")
-    public CustomResponse<List<CommentResDTO>> getComments(
+    public CustomResponse<CursorPageResDTO<CommentResDTO>> getComments(
             @Parameter(description = "댓글 목록을 조회할 게시글 ID", required = true)
             @PathVariable Long articleId,
             @Parameter(description = "커서 ID, null이면 처음부터 조회")
@@ -44,8 +45,7 @@ public class CommentController {
             @RequestParam(defaultValue = "10") int size
     ){
         CursorPageRequest pageRequest = new CursorPageRequest(cursorId, size);
-        List<CommentResDTO> comments = commentQueryService.getCommentsByArticleId(articleId, pageRequest);
-        return CustomResponse.onSuccess(comments);
+        return CustomResponse.onSuccess(commentQueryService.getCommentsByArticleId(articleId, pageRequest));
     }
 
     @DeleteMapping("/delete/{commentId}")
