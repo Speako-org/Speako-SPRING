@@ -14,6 +14,7 @@ public class UserChallengeConverter {
         return UserChallengeResponse.builder()
                 .challengeName(challenge.getName())
                 .description(challenge.getDescription())
+                .icon(challenge.getIconCode().getEmoji())
                 .levelName(challenge.getLevelName())
                 .currentAmount(userChallenge.getAmount())
                 .requiredAmount(challenge.getRequiredAmount())

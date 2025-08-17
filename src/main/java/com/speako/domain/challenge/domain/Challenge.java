@@ -1,5 +1,6 @@
 package com.speako.domain.challenge.domain;
 
+import com.speako.domain.challenge.domain.enums.IconCode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,6 +25,10 @@ public class Challenge {
 
     @Column(nullable = false, length = 200)
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "icon_code", nullable = false, updatable = false)
+    private IconCode iconCode;
 
     @Column(nullable = false)
     private Integer level;

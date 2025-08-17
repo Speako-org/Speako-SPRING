@@ -12,8 +12,10 @@ public class UserBadgeConverter {
         Badge badge = userBadge.getBadge();
 
         return UserBadgeResponse.builder()
+                .userBadgeId(userBadge.getId())
                 .badgeName(badge.getName())
                 .description(badge.getDescription())
+                .icon(badge.getIconCode().getEmoji())
                 .build();
     }
 }

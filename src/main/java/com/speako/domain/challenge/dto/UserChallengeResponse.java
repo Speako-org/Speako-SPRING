@@ -10,6 +10,7 @@ import lombok.Getter;
 public class UserChallengeResponse {
     private String challengeName;
     private String description;
+    private String icon;
     private String levelName;
     private Integer currentAmount;
     private Integer requiredAmount;
