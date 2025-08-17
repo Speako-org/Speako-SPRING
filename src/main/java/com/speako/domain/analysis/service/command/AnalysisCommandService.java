@@ -48,7 +48,7 @@ public class AnalysisCommandService {
 
         log.info("[NLP 분석 완료] analysisId={} / transcriptionId={}", analysis.getId(), transcription.getId());
       
-        // updateUserInfo 호출 (내부에서 monthlyStat과 userAchievement 업데이트 수행
+        // updateUserInfo 호출 (내부에서 monthlyStat과 userAchievement 업데이트 수행)
         userInfoCommandService.updateUserInfo(analysis);
 
         userChallengeService.updateChallengeProgress(transcription.getRecord().getUser(), analysis);

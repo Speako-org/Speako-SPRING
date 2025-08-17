@@ -46,6 +46,9 @@ public class MonthlyStat {
     @Column(name = "last_streak_update_date")
     private LocalDate lastStreakUpdateDate;
 
+    @Column(name = "total_record_count", nullable = false)
+    private int totalRecordCount;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -53,8 +56,17 @@ public class MonthlyStat {
     // 긍정/부정 비율 update
     public void updateRatios(float newPositiveRatio, float newNegativeRatio) {
 
-        this.avgPositiveRatio = (this.avgPositiveRatio + newPositiveRatio) / 2;
-        this.avgNegativeRatio = (this.avgNegativeRatio + newNegativeRatio) / 2;
+        if (this.totalRecordCount == 0) {
+            // 첫 기록인 경우 그대로 할당
+            this.avgPositiveRatio = newPositiveRatio;
+            this.avgNegativeRatio = newNegativeRatio;
+        } else {
+            // 누적 평균 계산
+            this.avgPositiveRatio = ((this.avgPositiveRatio * this.totalRecordCount) + newPositiveRatio) / (this.totalRecordCount + 1);
+            this.avgNegativeRatio = ((this.avgNegativeRatio * this.totalRecordCount) + newNegativeRatio) / (this.totalRecordCount + 1);
+        }
+        // 총 녹음기록 수 증가
+        this.totalRecordCount++;
     }
 
     // 현재 달의 연속 기록 기록일 수 update (maxStreak랑 비교 및 업데이트 포함)

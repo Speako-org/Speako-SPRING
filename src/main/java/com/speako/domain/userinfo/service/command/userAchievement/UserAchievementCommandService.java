@@ -4,7 +4,6 @@ import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.user.domain.User;
 import com.speako.domain.userinfo.domain.UserAchievement;
 import com.speako.domain.userinfo.exception.UserAchievementErrorCode;
-import com.speako.domain.userinfo.repository.UserAchievementRepository;
 import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,6 @@ import java.time.LocalDate;
 @Transactional
 @RequiredArgsConstructor
 public class UserAchievementCommandService {
-
-    private final UserAchievementRepository userAchievementRepository;
 
     // 분석결과(Analysis)를 사용하여 사용자의 UserAchievement를 update
     public void updateUserAchievement(Analysis analysis) {
@@ -43,5 +40,15 @@ public class UserAchievementCommandService {
 
         float oldTotal = achievement.getAvgPositiveRatio() * achievement.getTotalRecordedDays();
         return (oldTotal + newRatio) / (achievement.getTotalRecordedDays() + 1);
+    }
+
+    // 해당 유저의 UserAchievement 속 currentBadgeCount 증가
+    public void increaseCurrentBadgeCount(User user) {
+
+        UserAchievement userAchievement = user.getUserAchievement();
+        if (userAchievement == null) {
+            throw new CustomException(UserAchievementErrorCode.USER_ACHIEVEMENT_NOT_FOUND);
+        }
+        userAchievement.increaseCurrentBadgeCount();
     }
 }

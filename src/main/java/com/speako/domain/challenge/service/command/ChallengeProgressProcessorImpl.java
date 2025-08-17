@@ -10,6 +10,7 @@ import com.speako.domain.challenge.repository.BadgeRepository;
 import com.speako.domain.challenge.repository.ChallengeRepository;
 import com.speako.domain.challenge.repository.UserBadgeRepository;
 import com.speako.domain.challenge.repository.UserChallengeRepository;
+import com.speako.domain.userinfo.service.command.userAchievement.UserAchievementCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class ChallengeProgressProcessorImpl implements ChallengeProgressProcesso
     private final UserBadgeRepository userBadgeRepository;
     private final UserChallengeRepository userChallengeRepository;
     private final ChallengeRepository challengeRepository;
-
+    private final UserAchievementCommandService userAchievementCommandService;
 
     @Override
     public boolean processChallenge(UserChallenge userChallenge, Analysis analysis) {
@@ -135,6 +136,9 @@ public class ChallengeProgressProcessorImpl implements ChallengeProgressProcesso
                     .build();
 
             userBadgeRepository.save(userBadge);
+
+            // UserAchievement 속 currentBadgeCount 업데이트
+            userAchievementCommandService.increaseCurrentBadgeCount(userChallenge.getUser());
         }
     }
 }

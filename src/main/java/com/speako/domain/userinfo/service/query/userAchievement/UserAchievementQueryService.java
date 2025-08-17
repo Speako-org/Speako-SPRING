@@ -29,8 +29,7 @@ public class UserAchievementQueryService {
             throw new CustomException(UserAchievementErrorCode.USER_ACHIEVEMENT_NOT_FOUND);
         }
         Optional<UserBadge> userMainBadge = userBadgeRepository.findByUserIdAndIsMain(user.getId());
-//        Optional<String> userMainBadgeName = userMainBadge.map(userBadge -> userBadge.getBadge().getName());
-        Optional<String> userMainBadgeName = Optional.of("임시 메인 타이틀"); // TODO 임시값 하드코딩 (삭제 필요)
+        Optional<String> userMainBadgeName = userMainBadge.map(userBadge -> userBadge.getBadge().getName());
 
         // 뱃지의 총 개수와 현재 획득 수를 통한 뱃지 획득률 계산
         int current = achievement.getCurrentBadgeCount();

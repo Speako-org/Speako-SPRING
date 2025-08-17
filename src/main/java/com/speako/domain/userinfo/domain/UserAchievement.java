@@ -59,4 +59,8 @@ public class UserAchievement {
     public void updateAvgPositiveRatio(float newAvgPositiveRatio) {
         this.avgPositiveRatio = newAvgPositiveRatio;
     }
+
+    public void increaseCurrentBadgeCount() {
+        this.currentBadgeCount++;
+    }
 }
