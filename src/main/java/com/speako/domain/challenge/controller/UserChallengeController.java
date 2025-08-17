@@ -8,7 +8,6 @@ import com.speako.domain.challenge.domain.UserBadge;
 import com.speako.domain.challenge.domain.UserChallenge;
 import com.speako.domain.challenge.dto.UserBadgeResponse;
 import com.speako.domain.challenge.dto.UserChallengeResponse;
-import com.speako.domain.challenge.service.command.UserChallengeService;
 import com.speako.domain.challenge.service.query.UserChallengeQueryService;
 import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.global.apiPayload.CustomResponse;

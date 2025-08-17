@@ -8,6 +8,8 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class UserBadgeResponse {
+    private Long userBadgeId;
     private String badgeName;
     private String description;
+    private String icon;
 }
