@@ -1,23 +1,18 @@
 package com.speako.domain.challenge.service.command;
 
 import com.speako.domain.analysis.domain.Analysis;
-import com.speako.domain.analysis.repository.AnalysisRepository;
-import com.speako.domain.challenge.domain.Badge;
 import com.speako.domain.challenge.domain.Challenge;
-import com.speako.domain.challenge.domain.UserBadge;
 import com.speako.domain.challenge.domain.UserChallenge;
 import com.speako.domain.challenge.domain.enums.ChallengeType;
-import com.speako.domain.challenge.repository.BadgeRepository;
+import com.speako.domain.challenge.exception.ChallengeErrorCode;
 import com.speako.domain.challenge.repository.ChallengeRepository;
-import com.speako.domain.challenge.repository.UserBadgeRepository;
 import com.speako.domain.challenge.repository.UserChallengeRepository;
-import com.speako.domain.record.repository.RecordRepository;
 import com.speako.domain.user.domain.User;
+import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +51,9 @@ public class UserChallengeServiceImpl implements UserChallengeService {
         // ChallengeType Enum의 모든 값들로 초기화
         for (ChallengeType challengeType : ChallengeType.values()) {
             Optional<Challenge> challenge = challengeRepository.findByNameAndLevel(challengeType.getDisplayName(), 1);
-
+            if (challenge.isEmpty()) {
+                throw new CustomException(ChallengeErrorCode.CHALLENGE_NOT_FOUND);
+            }
             UserChallenge userChallenge = UserChallenge.builder()
                     .user(user)
                     .challenge(challenge.get())

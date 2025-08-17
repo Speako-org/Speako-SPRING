@@ -26,6 +26,7 @@ public enum ImageType {
 
     // 입력 값과 일치하는 displayName의 ImageType 찾기
     public static ImageType fromDisplayName(String displayName) {
+
         for (ImageType imageType : ImageType.values()) {
             if (imageType.getDisplayName().equalsIgnoreCase(displayName)) {
                 return imageType;

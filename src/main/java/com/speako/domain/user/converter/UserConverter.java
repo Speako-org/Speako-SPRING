@@ -22,14 +22,15 @@ public class UserConverter {
                 .build();
     }
 
-    public static User kakaoToUser(String email, String username, AuthProvider authProvider) {
+    public static User kakaoToUser(String email, String username) {
         return User.builder()
                 .email(email)
                 .password(null) // 로그인 인증에 사용될 일 없음
                 .username(username)
                 .age(null)
                 .gender(UserGender.OTHER)
-                .authProvider(authProvider)
+                .imageType(ImageType.DEFAULT)
+                .authProvider(AuthProvider.KAKAO)
                 .build();
     }
 }

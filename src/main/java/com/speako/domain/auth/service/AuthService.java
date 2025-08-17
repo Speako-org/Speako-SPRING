@@ -5,6 +5,8 @@ import com.speako.domain.auth.dto.reqDTO.SignupRequest;
 import com.speako.domain.auth.dto.resDTO.JwtResponse;
 import com.speako.domain.auth.dto.resDTO.LoginResponse;
 import com.speako.domain.auth.exception.SecurityErrorCode;
+import com.speako.domain.challenge.service.command.UserChallengeService;
+import com.speako.domain.challenge.service.query.BadgeQueryService;
 import com.speako.domain.security.jwt.JwtTokenProvider;
 import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.domain.user.converter.UserConverter;
@@ -34,8 +36,9 @@ import java.util.concurrent.TimeUnit;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final BadgeQueryService badgeQueryService;
     private final UserAchievementRepository userAchievementRepository;
-//    private final UserChallengeService userChallengeService;
+    private final UserChallengeService userChallengeService;
     private final RedisUtil redisUtil;
     private final JwtTokenProvider jwtTokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -52,13 +55,12 @@ public class AuthService {
         User user = userRepository.save(UserConverter.toUser(signupRequest, bCryptPasswordEncoder));
 
         // UserAchievement Initialize
-//        int totalBadgeCount = badgeService.countInitialBadgesFor(user); -> 총 Badge 종류 수 카운트
-        int totalBadgeCount = 20; // TODO 총 뱃지 수 임시 하드코딩, 삭제 필요
+        int totalBadgeCount = badgeQueryService.countTotalBadges(); // 전체 뱃지 종류 수 카운트
         UserAchievement userAchievement = UserAchievementConverter.toUserAchievement(user, totalBadgeCount);
         userAchievementRepository.save(userAchievement);
 
         // Challenge Initialize
-//        userChallengeService.initializeUserChallenges(user); // TODO challenge 코드 머지 후 주석 풀기
+        userChallengeService.initializeUserChallenges(user);
 
         log.info("[AuthService] 회원가입 완료");
         return user.getId();

@@ -58,7 +58,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             }
         } else {
             // DB에 해당 이메일의 일반 계정이 없으면, 새로운 유저 저장 후 반환
-            User newUser = UserConverter.kakaoToUser(oAuth2Response.getEmail(), oAuth2Response.getNickName(), AuthProvider.KAKAO);
+            User newUser = UserConverter.kakaoToUser(oAuth2Response.getEmail(), oAuth2Response.getNickName());
             userRepository.save(newUser);
             log.info("[CustomOAuth2UserService] 해당 Kakao 계정 최초 로그인입니다. DB에 유저 정보 생성 성공.");
             return new CustomOAuth2User(newUser);

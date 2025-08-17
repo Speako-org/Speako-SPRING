@@ -31,10 +31,6 @@ public class Analysis {
     @Column(name = "negative_sentences", columnDefinition = "jsonb", updatable = false)
     private List<String> negativeSentences;
 
-//    @JdbcTypeCode(SqlTypes.JSON)
-//    @Column(name = "negative_words", columnDefinition = "jsonb", updatable = false)
-//    private List<String> negativeWords;
-
     @Column(name = "positive_ratio", nullable = false)
     private Float positiveRatio;
 

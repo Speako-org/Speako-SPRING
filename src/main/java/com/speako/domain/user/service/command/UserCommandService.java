@@ -47,8 +47,7 @@ public class UserCommandService {
                 throw new CustomException(UserBadgeErrorCode.USER_BADGE_NOT_OWNED_BY_USER);
             }
             newMain.updateIsMain(true);
-//            updatedBadgeName = newMain.getBadge().getName();
-            updatedBadgeName = "수정된 뱃지 이름"; // TODO 뱃지이름 하드코딩, 삭제 필요
+            updatedBadgeName = newMain.getBadge().getName();
         }
 
         return new UpdateMainUserBadgeResDTO(

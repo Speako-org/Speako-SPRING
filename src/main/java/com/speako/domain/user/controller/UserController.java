@@ -8,7 +8,6 @@ import com.speako.domain.userinfo.dto.resDTO.UpdateMainUserBadgeResDTO;
 import com.speako.domain.userinfo.dto.resDTO.userAchievement.UpdateImageTypeResDTO;
 import com.speako.global.apiPayload.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,7 @@ public class UserController {
     @Operation(method = "PATCH", summary = "대표 뱃지 update API", description = "사용자의 대표 타이틀 뱃지를 변경하는 API입니다.")
     public CustomResponse<UpdateMainUserBadgeResDTO> updateRepresentativeBadge(
             @LoginUser CustomUserDetails userDetails,
-            @Valid @RequestBody UpdateMainUserBadgeReqDTO updateMainUserBadgeReqDTO) {
+            @RequestBody UpdateMainUserBadgeReqDTO updateMainUserBadgeReqDTO) {
 
         UpdateMainUserBadgeResDTO resDTO = userCommandService.UpdateMainUserBadge(
                 userDetails.getId(),
