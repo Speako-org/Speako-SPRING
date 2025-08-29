@@ -31,11 +31,18 @@ public class UserBadge {
     @Column(name = "is_main", nullable = false)
     private boolean isMain;
 
+    @Column(name = "is_posted", nullable = false)
+    private boolean isPosted;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public void updateIsMain(boolean isMain) {
         this.isMain = isMain;
+    }
+
+    public void updateIsPosted(boolean isPosted) {
+        this.isPosted = isPosted;
     }
 }

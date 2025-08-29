@@ -16,6 +16,8 @@ public class UserBadgeConverter {
                 .badgeName(badge.getName())
                 .description(badge.getDescription())
                 .icon(badge.getIconCode().getEmoji())
+                .isPosted(userBadge.isPosted())
+                .createAt(userBadge.getCreatedAt())
                 .build();
     }
 }
