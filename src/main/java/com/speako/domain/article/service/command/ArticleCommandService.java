@@ -6,6 +6,7 @@ import com.speako.domain.article.exception.ArticleErrorCode;
 import com.speako.domain.article.repository.ArticleRepository;
 import com.speako.domain.article.repository.CommentRepository;
 import com.speako.domain.challenge.domain.UserBadge;
+import com.speako.domain.challenge.exception.UserBadgeErrorCode;
 import com.speako.domain.challenge.repository.UserBadgeRepository;
 import com.speako.domain.user.domain.User;
 import com.speako.domain.user.repository.UserRepository;
@@ -30,6 +31,10 @@ public class ArticleCommandService {
 
         UserBadge userBadge = userBadgeRepository.findById(dto.userBadgeId())
                 .orElseThrow(() -> new CustomException(ArticleErrorCode.BAD_REQUEST));
+        // 동일 뱃지에 대해 게시글 작성되어 있으면 에러 (중복 허용X)
+        if (userBadge.isPosted()) {
+            throw new CustomException(UserBadgeErrorCode.ALREADY_POSTED_BADGE);
+        }
 
         Article article = Article.builder()
                 .user(user)
@@ -39,6 +44,7 @@ public class ArticleCommandService {
                 .build();
 
         articleRepository.save(article);
+        userBadge.updateIsPosted(true);
     }
 
     public void deleteArticle(Long userId, Long articleId){
@@ -50,6 +56,7 @@ public class ArticleCommandService {
         }
         commentRepository.deleteByArticleId(articleId);
 
+        article.getUserBadge().updateIsPosted(false);
         articleRepository.delete(article);
     }
 
