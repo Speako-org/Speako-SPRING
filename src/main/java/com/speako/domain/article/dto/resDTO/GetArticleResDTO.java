@@ -15,6 +15,7 @@ public record GetArticleResDTO(
         Long userBadgeId,
         String badgeTitle,
         String badgeDescription,
+        String icon,
 
         String content,
         int likedNum,
