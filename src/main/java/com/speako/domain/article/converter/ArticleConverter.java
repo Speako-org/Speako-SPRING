@@ -30,6 +30,7 @@ public class ArticleConverter {
                 userBadge.getId(),
                 badge.getName(),
                 badge.getDescription(),
+                badge.getIconCode().getEmoji(),
 
                 article.getContent(),
                 article.getLikedNum(),
