@@ -6,6 +6,7 @@ import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
 import com.speako.domain.transcription.exception.TranscriptionErrorCode;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
+import com.speako.domain.user.domain.User;
 import com.speako.external.aws.service.AwsS3Service;
 import com.speako.external.nlp.NlpAnalyzeClient;
 import com.speako.global.apiPayload.exception.CustomException;
@@ -33,7 +34,7 @@ public class TranscriptionCommandService {
     private final NlpAnalyzeClient nlpAnalyzeClient;
 
     // 전달받은 메타데이터로 Transcription 생성 및 fastApi 호출 (Transcribe 작업 요청)
-    public void startStt(Record record, LocalDateTime startTime, LocalDateTime endTime) {
+    public void startStt(User user, Record record, LocalDateTime startTime, LocalDateTime endTime) {
 
         // 기본 title 값 생성  ex) 기록_250417_135703
         String defaultTitle = "기록_" + startTime.format(DateTimeFormatter.ofPattern("yyMMdd_HHmmss"));
@@ -41,7 +42,7 @@ public class TranscriptionCommandService {
         // 메타데이터로 Transcription 엔티티 생성 및 저장
         Transcription transcription = transcriptionRepository.save(
                 Transcription.builder()
-//                        .user(user)
+                        .user(user)
                         .record(record)
                         .title(defaultTitle)
                         .startTime(startTime)

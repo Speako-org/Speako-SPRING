@@ -1,12 +1,15 @@
 package com.speako.domain.record.service.command;
 
-import com.speako.domain.record.dto.resDTO.PresignedUrlResDTO;
-import com.speako.domain.record.dto.resDTO.RecordUploadResDTO;
+import com.speako.domain.article.exception.ArticleErrorCode;
 import com.speako.domain.record.domain.Record;
 import com.speako.domain.record.domain.enums.RecordStatus;
+import com.speako.domain.record.dto.resDTO.PresignedUrlResDTO;
+import com.speako.domain.record.dto.resDTO.RecordUploadResDTO;
 import com.speako.domain.record.exception.RecordErrorCode;
 import com.speako.domain.record.repository.RecordRepository;
 import com.speako.domain.transcription.service.command.TranscriptionCommandService;
+import com.speako.domain.user.domain.User;
+import com.speako.domain.user.repository.UserRepository;
 import com.speako.external.aws.service.AwsS3Service;
 import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +23,16 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class RecordCommandService {
 
+    private final UserRepository userRepository;
     private final RecordRepository recordRepository;
     private final AwsS3Service awsS3Service;
     private final TranscriptionCommandService transcriptionCommandService;
 
     // presigned url 발급 및 Record 엔티티 생성
-    public RecordUploadResDTO createPresignedUrl(Long recordId, String fileName) {
+    public RecordUploadResDTO createPresignedUrl(Long userId, Long recordId, String fileName) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ArticleErrorCode.USER_NOT_FOUND));
 
         PresignedUrlResDTO presignedDTO = awsS3Service.getPresignedUrl(fileName);
 
@@ -33,7 +40,7 @@ public class RecordCommandService {
             // recordId가 null이면, SAVING 상태의 새로운 Record 엔티티 생성
             Record record = recordRepository.save(
                     Record.builder()
-//                            .user(user) -> 추후에 user 정보 포함하여 record 생성하도록 수정하기
+                            .user(user)
                             .recordStatus(RecordStatus.SAVING)
                             .build()
             );
@@ -48,7 +55,10 @@ public class RecordCommandService {
     }
 
     // 녹음파일 업로드 완료처리 및 STT 변환 시작
-    public void completeUploadAndStartStt(Long recordId, String recordS3Path, LocalDateTime startTime, LocalDateTime endTime) {
+    public void completeUploadAndStartStt(Long userId, Long recordId, String recordS3Path, LocalDateTime startTime, LocalDateTime endTime) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ArticleErrorCode.USER_NOT_FOUND));
 
         // Record 상태 및 s3 경로 업데이트
         Record record = recordRepository.findById(recordId)
@@ -57,6 +67,6 @@ public class RecordCommandService {
         record.updateRecordS3Path(recordS3Path);
 
         // 전달받은 메타데이터로 Transcription 생성 및 fastApi 호출 (Transcribe 작업 요청)
-        transcriptionCommandService.startStt(record, startTime, endTime);
+        transcriptionCommandService.startStt(user, record, startTime, endTime);
     }
 }
