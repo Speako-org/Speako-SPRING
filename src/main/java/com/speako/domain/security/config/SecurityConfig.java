@@ -1,11 +1,12 @@
 package com.speako.domain.security.config;
 
-import com.speako.domain.security.jwt.JwtAuthenticationFilter;
-import com.speako.domain.security.handler.CustomAuthenticationEntryPoint;
 import com.speako.domain.auth.oauth.handler.OAuth2FailureHandler;
 import com.speako.domain.auth.oauth.handler.OAuth2SuccessHandler;
-import com.speako.domain.security.jwt.JwtTokenProvider;
 import com.speako.domain.auth.oauth.service.CustomOAuth2UserService;
+import com.speako.domain.security.filter.InternalAuthFilter;
+import com.speako.domain.security.filter.JwtAuthenticationFilter;
+import com.speako.domain.security.handler.CustomAuthenticationEntryPoint;
+import com.speako.domain.security.jwt.JwtTokenProvider;
 import com.speako.domain.security.principal.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final InternalAuthFilter internalAuthFilter;
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomUserDetailsService customUserDetailsService;
@@ -59,7 +61,11 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/reissue",
                                 "/login/oauth2/**",
-                                "/oauth2/**"
+                                "/oauth2/**",
+
+                                // FastApi 서버에서 내부적으로 호출하는 api (shared-secret 검증)
+                                "/api/transcriptions/*/complete",
+                                "/api/analyze/complete"
 
                         ).permitAll()
                         // 지정 url 이외의 모든 요청은 인증 필요
@@ -78,6 +84,8 @@ public class SecurityConfig {
                         new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService),
                         UsernamePasswordAuthenticationFilter.class
                 )
+                // JwtAuthenticationFilter 이전에 InternalAuthFilter 넣기 (내부 API 여부 먼저 체크)
+                .addFilterBefore(internalAuthFilter, JwtAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)  // 아래에서 정의

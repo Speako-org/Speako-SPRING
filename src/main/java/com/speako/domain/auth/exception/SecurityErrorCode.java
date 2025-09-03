@@ -15,6 +15,7 @@ public enum SecurityErrorCode implements BaseErrorCode {
     BLACKLISTED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH401-4", "블랙리스트 처리된 토큰입니다."),
     JWT_AUTHENTICATION_ERROR(HttpStatus.UNAUTHORIZED, "AUTH401-5", "JWT 인증 중 오류가 발생했습니다."),
     INVALID_EMAIL_OR_PASSWORD(HttpStatus.UNAUTHORIZED, "AUTH401-6", "이메일 또는 비밀번호가 올바르지 않습니다."),
+    INTERNAL_AUTH_SECRET_INVALID(HttpStatus.UNAUTHORIZED, "AUTH401-7", "내부 API 인증에 실패했습니다. (Shared Secret 불일치)"),
 
     TOO_MANY_LOGIN_ATTEMPTS(HttpStatus.TOO_MANY_REQUESTS, "AUTH429-1", "로그인 시도 횟수가 너무 많습니다. 잠시 후 다시 시도해주세요."),
 
