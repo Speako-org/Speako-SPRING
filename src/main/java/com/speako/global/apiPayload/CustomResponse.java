@@ -2,6 +2,7 @@ package com.speako.global.apiPayload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.speako.global.apiPayload.code.BaseErrorCode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,10 @@ public class CustomResponse<T> {
     // 데이터 미포함 실패 응답
     public static <T> CustomResponse<T> onFailure(String code, String message) {
         return new CustomResponse<>(false, code, message, null);
+    }
+
+    // 에러코드 기반 실패 응답
+    public static <T> CustomResponse<T> onFailure(BaseErrorCode errorCode) {
+        return new CustomResponse<>(false, errorCode.getCode(), errorCode.getMessage(), null);
     }
 }
