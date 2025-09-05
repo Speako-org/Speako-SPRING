@@ -63,6 +63,10 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    public void updateUserName(String username) {
+        this.username = username;
+    }
+
     public void updateImageType(ImageType imageType) {
         this.imageType = imageType;
     }

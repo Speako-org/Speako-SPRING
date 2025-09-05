@@ -2,12 +2,15 @@ package com.speako.domain.transcription.controller;
 
 import com.speako.domain.auth.annotation.LoginUser;
 import com.speako.domain.security.principal.CustomUserDetails;
+import com.speako.domain.transcription.dto.reqDTO.UpdateTranscriptionTitleReqDTO;
 import com.speako.domain.transcription.dto.resDTO.TranscriptionResDTO;
+import com.speako.domain.transcription.dto.resDTO.UpdateTranscriptionTitleResDTO;
 import com.speako.domain.transcription.service.command.TranscriptionCommandService;
 import com.speako.domain.transcription.service.query.TranscriptionQueryService;
 import com.speako.global.apiPayload.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,5 +46,20 @@ public class TranscriptionController {
             @RequestParam(value = "date") LocalDate date) {
 
         return CustomResponse.onSuccess(transcriptionQueryService.getTranscriptionListByDate(customUserDetails, date));
+    }
+
+    @PatchMapping("/{transcriptionId}/title")
+    @Operation(method = "PATCH", summary = "녹음기록 title update API", description = "특정 녹음기록의 title을 변경하는 API입니다.")
+    public CustomResponse<UpdateTranscriptionTitleResDTO> updateTranscriptionTitle(
+            @LoginUser CustomUserDetails userDetails,
+            @PathVariable Long transcriptionId,
+            @Valid @RequestBody UpdateTranscriptionTitleReqDTO updateTranscriptionTitleDTO) {
+
+        UpdateTranscriptionTitleResDTO resDTO = transcriptionCommandService.updateTranscriptionTitle(
+                userDetails.getId(),
+                transcriptionId,
+                updateTranscriptionTitleDTO.newTranscriptionTitle()
+        );
+        return CustomResponse.onSuccess(resDTO);
     }
 }

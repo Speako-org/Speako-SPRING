@@ -1,18 +1,20 @@
 package com.speako.domain.transcription.service.command;
 
 import com.speako.domain.record.domain.Record;
-import com.speako.domain.transcription.dto.reqDTO.TranscribeReqDTO;
 import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
+import com.speako.domain.transcription.dto.reqDTO.TranscribeReqDTO;
+import com.speako.domain.transcription.dto.resDTO.UpdateTranscriptionTitleResDTO;
 import com.speako.domain.transcription.exception.TranscriptionErrorCode;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.domain.user.domain.User;
+import com.speako.domain.user.exception.UserErrorCode;
+import com.speako.domain.user.repository.UserRepository;
 import com.speako.external.aws.service.AwsS3Service;
 import com.speako.external.nlp.NlpAnalyzeClient;
 import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,8 +30,8 @@ import java.time.format.DateTimeFormatter;
 public class TranscriptionCommandService {
 
     private final TranscriptionRepository transcriptionRepository;
+    private final UserRepository userRepository;
     private final WebClient fastApiWebClient;
-    private final ApplicationEventPublisher eventPublisher;
     private final AwsS3Service awsS3Service;
     private final NlpAnalyzeClient nlpAnalyzeClient;
 
@@ -112,6 +114,25 @@ public class TranscriptionCommandService {
         //eventPublisher.publishEvent(new SttCompletedEvent(transcriptionId, transcriptionFullText));
 
         nlpAnalyzeClient.analyze(transcriptionId, transcriptionS3Path);
+    }
+
+    public UpdateTranscriptionTitleResDTO updateTranscriptionTitle(Long userId, Long transcriptionId, String newTranscriptionTitle) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+        Transcription transcription = transcriptionRepository.findById(transcriptionId)
+                .orElseThrow(() -> new CustomException(TranscriptionErrorCode.TRANSCRIPTION_NOT_FOUND));
+
+        // 현재 User가 해당 transcription의 User가 아닐 시, 권한없음 에러 발생
+        if (!transcription.getUser().getId().equals(user.getId())) {
+            throw new CustomException(TranscriptionErrorCode.TRANSCRIPTION_UPDATE_FORBIDDEN);
+        }
+        transcription.updateTitle(newTranscriptionTitle);
+
+        return new UpdateTranscriptionTitleResDTO(
+                transcription.getId(),
+                transcription.getTitle()
+        );
     }
 
     /*

@@ -5,6 +5,7 @@ import com.speako.domain.challenge.exception.UserBadgeErrorCode;
 import com.speako.domain.challenge.repository.UserBadgeRepository;
 import com.speako.domain.user.domain.User;
 import com.speako.domain.user.domain.enums.ImageType;
+import com.speako.domain.user.dto.resDTO.UpdateUserNameResDTO;
 import com.speako.domain.user.exception.UserErrorCode;
 import com.speako.domain.user.repository.UserRepository;
 import com.speako.domain.userinfo.dto.resDTO.UpdateMainUserBadgeResDTO;
@@ -67,6 +68,19 @@ public class UserCommandService {
         return new UpdateImageTypeResDTO(
                 userId,
                 imageType.getImageUrl()
+        );
+    }
+
+    public UpdateUserNameResDTO updateUserName(Long userId, String newUserName) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+
+        user.updateUserName(newUserName);
+
+        return new UpdateUserNameResDTO(
+                user.getId(),
+                user.getUsername()
         );
     }
 }
