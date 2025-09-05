@@ -13,6 +13,8 @@ public enum TranscriptionErrorCode implements BaseErrorCode {
 
     ANALYSIS_NOT_COMPLETED(HttpStatus.BAD_REQUEST, "TRANSCRIPTION400-1", "해당 기록의 분석이 아직 완료되지 않았습니다."),
 
+    TRANSCRIPTION_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "TRANSCRIPTION403-1", "해당 녹음 기록을 수정할 권한이 없습니다."),
+
     ;
 
     private final HttpStatus status;

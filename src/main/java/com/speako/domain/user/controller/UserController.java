@@ -2,6 +2,8 @@ package com.speako.domain.user.controller;
 
 import com.speako.domain.auth.annotation.LoginUser;
 import com.speako.domain.security.principal.CustomUserDetails;
+import com.speako.domain.user.dto.reqDTO.UpdateUserNameReqDTO;
+import com.speako.domain.user.dto.resDTO.UpdateUserNameResDTO;
 import com.speako.domain.user.service.command.UserCommandService;
 import com.speako.domain.userinfo.dto.reqDTO.UpdateMainUserBadgeReqDTO;
 import com.speako.domain.userinfo.dto.resDTO.UpdateMainUserBadgeResDTO;
@@ -39,6 +41,19 @@ public class UserController {
             @RequestParam String newImageName) {
 
         UpdateImageTypeResDTO resDTO = userCommandService.updateProfileImage(userDetails.getId(), newImageName);
+        return CustomResponse.onSuccess(resDTO);
+    }
+
+    @PatchMapping("/username")
+    @Operation(method = "PATCH", summary = "사용자의 userName update API", description = "현재 사용자의 userName을 변경하는 API입니다.")
+    public CustomResponse<UpdateUserNameResDTO> updateUserName(
+            @LoginUser CustomUserDetails userDetails,
+            @Valid @RequestBody UpdateUserNameReqDTO updateUserNameReqDTO) {
+
+        UpdateUserNameResDTO resDTO = userCommandService.updateUserName(
+                userDetails.getId(),
+                updateUserNameReqDTO.newUserName()
+        );
         return CustomResponse.onSuccess(resDTO);
     }
 }

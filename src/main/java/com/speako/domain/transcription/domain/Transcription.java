@@ -71,6 +71,10 @@ public class Transcription {
         this.thumbnailText = thumbnailText;
     }
 
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
     public boolean isDeleted() {
         return deletedAt != null;
     }
