@@ -13,6 +13,8 @@ public record NlpAnalysisResult(
         @JsonProperty("neutral_ratio")
         Float neutralRatio,
         @JsonProperty("negative_sentence")
-        List<String> negativeSentences
+        List<String> negativeSentences,
+        @JsonProperty("feedBack")
+        List<String> feedback
 ) {
 }

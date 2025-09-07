@@ -27,10 +27,6 @@ public class Analysis {
     @JoinColumn(name = "transcription_id")
     private Transcription transcription;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "negative_sentences", columnDefinition = "jsonb", updatable = false)
-    private List<String> negativeSentences;
-
     @Column(name = "positive_ratio", nullable = false)
     private Float positiveRatio;
 
@@ -39,6 +35,14 @@ public class Analysis {
 
     @Column(name = "neutral_ratio", nullable = false)
     private Float neutralRatio;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "negative_sentences", columnDefinition = "jsonb", updatable = false)
+    private List<String> negativeSentences;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "feedback_sentences", columnDefinition = "jsonb", updatable = false)
+    private List<String> feedbackSentences;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;

@@ -4,6 +4,8 @@ import com.speako.domain.analysis.dto.reqDTO.NlpCallbackRequestDTO;
 import com.speako.domain.analysis.dto.resDTO.AnalysisResponseDTO;
 import com.speako.domain.analysis.service.command.AnalysisCommandService;
 import com.speako.domain.analysis.service.query.AnalysisQueryService;
+import com.speako.domain.auth.annotation.LoginUser;
+import com.speako.domain.security.principal.CustomUserDetails;
 import com.speako.global.apiPayload.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,10 @@ public class AnalysisController {
     @GetMapping("/transcription/{transcriptionId}/analyses")
     @Operation(method = "GET", summary = "분석 결과 조회 API", description = "녹음 기록의 분석 결과를 조회하는 API입니다.")
     public CustomResponse<AnalysisResponseDTO> getAnalysis(
+            @LoginUser CustomUserDetails userDetails,
             @PathVariable(value = "transcriptionId") Long transcriptionId) {
 
-        AnalysisResponseDTO analysisResponseDTO = analysisQueryService.getAnalysis(transcriptionId);
+        AnalysisResponseDTO analysisResponseDTO = analysisQueryService.getAnalysis(userDetails.getId(), transcriptionId);
         return CustomResponse.onSuccess(analysisResponseDTO);
     }
 
