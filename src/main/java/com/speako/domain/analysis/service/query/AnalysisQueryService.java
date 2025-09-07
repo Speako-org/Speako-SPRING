@@ -33,7 +33,7 @@ public class AnalysisQueryService {
     private final TranscriptionRepository transcriptionRepository;
     private final AnalysisRepository analysisRepository;
 
-    public AnalysisResponseDTO getAnalysis(Long transcriptionId) {
+    public AnalysisResponseDTO getAnalysis(Long userId, Long transcriptionId) {
 
         Transcription transcription = transcriptionRepository.findById(transcriptionId)
                 .orElseThrow(() -> new CustomException(TranscriptionErrorCode.TRANSCRIPTION_NOT_FOUND));
@@ -56,7 +56,7 @@ public class AnalysisQueryService {
         Float averageNegativeRatioOfToday = calculateAverageNegativeRatioOfToday(transcription.getStartTime());
         List<DailyRatioOfRecent7Days> dailyRatioOfRecent7Days = toDailyRatioOfRecent7DaysList(transcription.getStartTime());
 
-        return AnalysisConverter.toAnalysisResponseDTO(transcription, analysis, averageNegativeRatioOf7DaysAgo, averageNegativeRatioOfToday, dailyRatioOfRecent7Days);
+        return AnalysisConverter.toAnalysisResponseDTO(userId, transcription, analysis, averageNegativeRatioOf7DaysAgo, averageNegativeRatioOfToday, dailyRatioOfRecent7Days);
     }
 
     // 조회일 기준 7일 전 기록의 평균 부정적 표현 사용 비율 구하기

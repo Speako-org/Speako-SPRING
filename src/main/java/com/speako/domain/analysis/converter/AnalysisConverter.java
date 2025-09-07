@@ -13,6 +13,7 @@ import java.util.List;
 public class AnalysisConverter {
 
     public static AnalysisResponseDTO toAnalysisResponseDTO(
+            Long userId,
             Transcription transcription,
             Analysis analysis,
             Float averageNegativeRatioOf7DaysAgo,
@@ -20,14 +21,15 @@ public class AnalysisConverter {
             List<DailyRatioOfRecent7Days> dailyRatioOfRecent7Days) {
 
         return AnalysisResponseDTO.builder()
-//                .userId(userId)
+                .userId(userId)
                 .transcriptionId(transcription.getId())
                 .analysisId(analysis.getId())
                 .title(transcription.getTitle())
                 .thumbnailText(transcription.getThumbnailText())
                 .negativeRatio(analysis.getNegativeRatio())
                 .positiveRatio(analysis.getPositiveRatio())
-//                .negativeWordsTop3(analysis.getNegativeWordsTop3())
+                .negativeSentencesTop3(analysis.getNegativeSentences())
+                .feedbackSentences(analysis.getFeedbackSentences())
                 .averageNegativeRatioOf7DaysAgo(averageNegativeRatioOf7DaysAgo)
                 .averageNegativeRatioOfToday(averageNegativeRatioOfToday)
                 .dailyRatioOfRecent7Days(dailyRatioOfRecent7Days)

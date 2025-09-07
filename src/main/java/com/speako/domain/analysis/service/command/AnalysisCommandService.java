@@ -32,6 +32,7 @@ public class AnalysisCommandService {
                         .negativeRatio(result.negativeRatio())
                         .neutralRatio(result.neutralRatio())
                         .negativeSentences(result.negativeSentences())
+                        .feedbackSentences(result.feedback())
                         .build()
         );
     }
