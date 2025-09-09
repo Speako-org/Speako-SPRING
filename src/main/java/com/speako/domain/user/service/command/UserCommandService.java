@@ -56,13 +56,13 @@ public class UserCommandService {
     }
 
     // 프로필 이미지 변경
-    public UpdateImageTypeResDTO updateProfileImage(Long userId, String newImageName) {
+    public UpdateImageTypeResDTO updateProfileImage(Long userId, String newImageNumber) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
-        // 입력된 newImageName과 일치하는 enum 조회 후, user에 할당
-        ImageType imageType = ImageType.fromDisplayName(newImageName);
+        // 입력된 newImageNumber과 일치하는 enum 조회 후, user에 할당
+        ImageType imageType = ImageType.fromDisplayNumber(newImageNumber);
         user.updateImageType(imageType);
 
         return new UpdateImageTypeResDTO(
