@@ -18,15 +18,4 @@ public enum UserGender {
     public String getDisplayName() {
         return displayName;
     }
-
-    // Json 변환
-    public static UserGender fromDisplayName(String displayName) {
-
-        for (UserGender userGender : UserGender.values()) {
-            if (userGender.getDisplayName().equalsIgnoreCase(displayName)) {
-                return userGender;
-            }
-        }
-        throw new IllegalArgumentException("Unknown gender: " + displayName);
-    }
 }
