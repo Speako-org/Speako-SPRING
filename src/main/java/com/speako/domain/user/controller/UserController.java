@@ -38,9 +38,9 @@ public class UserController {
     @Operation(method = "PATCH", summary = "프로필 이미지 update API", description = "사용자의 대표 이미지를 변경하는 API입니다.")
     public CustomResponse<UpdateImageTypeResDTO> updateProfileImage(
             @LoginUser CustomUserDetails userDetails,
-            @RequestParam String newImageName) {
+            @RequestParam String newImageNumber) {
 
-        UpdateImageTypeResDTO resDTO = userCommandService.updateProfileImage(userDetails.getId(), newImageName);
+        UpdateImageTypeResDTO resDTO = userCommandService.updateProfileImage(userDetails.getId(), newImageNumber);
         return CustomResponse.onSuccess(resDTO);
     }
 

@@ -17,7 +17,7 @@ public class UserConverter {
                 .username(signupRequest.username())
                 .age(signupRequest.age())
                 .gender(signupRequest.gender())
-                .imageType(ImageType.DEFAULT)
+                .imageType(ImageType.getRandom())
                 .authProvider(AuthProvider.LOCAL)
                 .build();
     }
@@ -29,8 +29,10 @@ public class UserConverter {
                 .username(username)
                 .age(null)
                 .gender(UserGender.OTHER)
-                .imageType(ImageType.DEFAULT)
+                .imageType(ImageType.getRandom())
                 .authProvider(AuthProvider.KAKAO)
                 .build();
     }
+
+
 }

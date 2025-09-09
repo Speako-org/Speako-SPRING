@@ -10,6 +10,7 @@ import com.speako.domain.user.exception.UserErrorCode;
 import com.speako.domain.user.repository.UserRepository;
 import com.speako.domain.userinfo.dto.resDTO.UpdateMainUserBadgeResDTO;
 import com.speako.domain.userinfo.dto.resDTO.userAchievement.UpdateImageTypeResDTO;
+import com.speako.global.apiPayload.code.CommonErrorCode;
 import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -56,13 +57,18 @@ public class UserCommandService {
     }
 
     // 프로필 이미지 변경
-    public UpdateImageTypeResDTO updateProfileImage(Long userId, String newImageName) {
+    public UpdateImageTypeResDTO updateProfileImage(Long userId, String newImageNumber) {
 
+        // 입력된 newImageNumber가 유효한지 enum 조회
+        ImageType imageType;
+        try {
+            imageType = ImageType.fromDisplayNumber(newImageNumber);
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(CommonErrorCode.NOT_VALID_ERROR);
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
-
-        // 입력된 newImageName과 일치하는 enum 조회 후, user에 할당
-        ImageType imageType = ImageType.fromDisplayName(newImageName);
+        // user에 조회된 ImageType 할당
         user.updateImageType(imageType);
 
         return new UpdateImageTypeResDTO(
