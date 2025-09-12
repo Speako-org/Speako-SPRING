@@ -62,4 +62,15 @@ public class TranscriptionController {
         );
         return CustomResponse.onSuccess(resDTO);
     }
+
+    // 녹음기록 softDelete API 구현
+    @DeleteMapping("/{transcriptionId}")
+    @Operation(method = "DELETE", summary = "녹음기록 삭제 API", description = "녹음기록과 연관된 모든 기록을 삭제하는 API입니다.")
+    public CustomResponse<String> softDeleteTranscription(
+            @LoginUser CustomUserDetails userDetails,
+            @PathVariable Long transcriptionId) {
+
+        transcriptionCommandService.softDeleteTranscription(userDetails.getId(), transcriptionId);
+        return CustomResponse.onSuccess(transcriptionId + "번 녹음기록과 관련된 기록이 성공적으로 삭제되었습니다.");
+    }
 }

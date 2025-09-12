@@ -1,5 +1,6 @@
 package com.speako.domain.transcription.service.command;
 
+import com.speako.domain.analysis.service.command.AnalysisCommandService;
 import com.speako.domain.record.domain.Record;
 import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.domain.enums.TranscriptionStatus;
@@ -31,9 +32,12 @@ public class TranscriptionCommandService {
 
     private final TranscriptionRepository transcriptionRepository;
     private final UserRepository userRepository;
+    
     private final WebClient fastApiWebClient;
-    private final AwsS3Service awsS3Service;
     private final NlpAnalyzeClient nlpAnalyzeClient;
+    
+    private final AwsS3Service awsS3Service;
+    private final AnalysisCommandService analysisCommandService;
 
     // 전달받은 메타데이터로 Transcription 생성 및 fastApi 호출 (Transcribe 작업 요청)
     public void startStt(User user, Record record, LocalDateTime startTime, LocalDateTime endTime) {
@@ -116,6 +120,7 @@ public class TranscriptionCommandService {
         nlpAnalyzeClient.analyze(transcriptionId, transcriptionS3Path);
     }
 
+    // 특정 녹음기록의 title을 변경
     public UpdateTranscriptionTitleResDTO updateTranscriptionTitle(Long userId, Long transcriptionId, String newTranscriptionTitle) {
 
         User user = userRepository.findById(userId)
@@ -133,6 +138,22 @@ public class TranscriptionCommandService {
                 transcription.getId(),
                 transcription.getTitle()
         );
+    }
+
+    // Transcription 및 관련 기록(Record, Analysis, 통계) soft 삭제 처리
+    public void softDeleteTranscription(Long userId, Long transcriptionId) {
+
+        Transcription transcription = transcriptionRepository.findById(transcriptionId)
+                .orElseThrow(() -> new CustomException(TranscriptionErrorCode.TRANSCRIPTION_NOT_FOUND));
+        // 현재 User가 해당 transcription의 User가 아닐 시, 권한없음 에러 발생
+        if (!userId.equals(transcription.getUser().getId())) {
+            throw new CustomException(TranscriptionErrorCode.TRANSCRIPTION_DELETE_FORBIDDEN);
+        }
+        // Transcription, Record, Analysis softDelete 처리
+        transcription.updateDeletedAt(LocalDateTime.now());
+        transcription.getRecord().updateDeletedAt(LocalDateTime.now()); // 역할분리 관점에서는 좋지 않지만, RecordCommandService에 맡길 시 순환참조 발생.
+                                                                        // 추후 새로운 Service 파일(헬퍼 서비스) 생성해서 옮기도록 할 것
+        analysisCommandService.softDeleteAnalysis(userId, transcriptionId);
     }
 
     /*

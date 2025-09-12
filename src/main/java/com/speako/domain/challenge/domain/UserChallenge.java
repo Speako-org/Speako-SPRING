@@ -3,7 +3,6 @@ package com.speako.domain.challenge.domain;
 import com.speako.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,13 +31,13 @@ public class UserChallenge {
     private Challenge challenge;
 
     @Column(nullable = false)
-    private Integer amount = 0;
+    private int amount = 0;
 
     @Column(name = "last_record_date")
     private LocalDate lastRecordDate;
 
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
+    private boolean isActive = true;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

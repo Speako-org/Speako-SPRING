@@ -2,15 +2,21 @@ package com.speako.domain.analysis.service.command;
 
 import com.speako.domain.analysis.dto.reqDTO.NlpAnalysisResult;
 import com.speako.domain.analysis.domain.Analysis;
+import com.speako.domain.analysis.exception.AnalysisErrorCode;
 import com.speako.domain.analysis.repository.AnalysisRepository;
 import com.speako.domain.challenge.service.command.UserChallengeService;
 import com.speako.domain.transcription.domain.Transcription;
 import com.speako.domain.transcription.repository.TranscriptionRepository;
 import com.speako.domain.userinfo.service.command.UserInfoCommandService;
+import com.speako.domain.userinfo.service.command.monthlyStat.MonthlyStatCommandService;
+import com.speako.domain.userinfo.service.command.userAchievement.UserAchievementCommandService;
+import com.speako.global.apiPayload.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 import static com.speako.domain.transcription.domain.enums.TranscriptionStatus.ANALYSIS_COMPLETED;
 
@@ -23,6 +29,8 @@ public class AnalysisCommandService {
     private final TranscriptionRepository transcriptionRepository;
     private final UserInfoCommandService userInfoCommandService;
     private final UserChallengeService userChallengeService;
+    private final MonthlyStatCommandService monthlyStatCommandService;
+    private final UserAchievementCommandService userAchievementCommandService;
 
     private Analysis saveAnalysis(Transcription transcription, NlpAnalysisResult result) {
         return analysisRepository.save(
@@ -57,4 +65,15 @@ public class AnalysisCommandService {
         //TODO: FCM
     }
 
+    // Analysis soft 삭제 처리 및 관련 통계치 rollback
+    public void softDeleteAnalysis(Long userId, Long transcriptionId) {
+
+        Analysis analysis = analysisRepository.findByTranscriptionId(transcriptionId)
+                .orElseThrow(() -> new CustomException(AnalysisErrorCode.ANALYSIS_NOT_FOUND));
+        analysis.updateDeletedAt(LocalDateTime.now());
+
+        // 통계치(MonthlyStat, UserAchievement) rollback
+        monthlyStatCommandService.rollbackMonthlyStat(userId, analysis);
+        userAchievementCommandService.rollbackUserAchievement(analysis);
+    }
 }
