@@ -69,4 +69,9 @@ public class RecordCommandService {
         // 전달받은 메타데이터로 Transcription 생성 및 fastApi 호출 (Transcribe 작업 요청)
         transcriptionCommandService.startStt(user, record, startTime, endTime);
     }
+
+    // Record soft 삭제 처리
+    public void softDeleteRecord(Record record) {
+        record.updateDeletedAt(LocalDateTime.now());
+    }
 }

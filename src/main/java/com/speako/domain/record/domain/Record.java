@@ -49,11 +49,8 @@ public class Record {
         this.s3Path = s3Path;
     }
 
-    public boolean isDeleted() {
-        return deletedAt != null;
-    }
-
-    public void softDelete() {
-        this.deletedAt = LocalDateTime.now();
+    // deletedAt 업데이트
+    public void updateDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

@@ -25,7 +25,7 @@ public class TranscriptionQueryService {
 
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = start.plusDays(1);
-        List<Transcription> transcriptions = transcriptionRepository.findAllByUserIdAndCreatedAtBetweenOrderByCreatedAtAsc(customUserDetails.getId(), start, end);
+        List<Transcription> transcriptions = transcriptionRepository.findAllByUserIdAndCreatedAtBetweenAndDeletedAtIsNullOrderByCreatedAtAsc(customUserDetails.getId(), start, end);
 
         return TranscriptionConverter.toTranscriptionResDTOList(transcriptions);
     }

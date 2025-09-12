@@ -75,11 +75,8 @@ public class Transcription {
         this.title = title;
     }
 
-    public boolean isDeleted() {
-        return deletedAt != null;
-    }
-
-    public void softDelete() {
-        this.deletedAt = LocalDateTime.now();
+    // deletedAt 업데이트
+    public void updateDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

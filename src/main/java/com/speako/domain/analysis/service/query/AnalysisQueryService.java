@@ -1,9 +1,9 @@
 package com.speako.domain.analysis.service.query;
 
 import com.speako.domain.analysis.converter.AnalysisConverter;
+import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.dto.resDTO.AnalysisResponseDTO;
 import com.speako.domain.analysis.dto.resDTO.DailyRatioOfRecent7Days;
-import com.speako.domain.analysis.domain.Analysis;
 import com.speako.domain.analysis.exception.AnalysisErrorCode;
 import com.speako.domain.analysis.repository.AnalysisRepository;
 import com.speako.domain.transcription.domain.Transcription;
@@ -18,10 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.time.YearMonth;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -57,6 +55,22 @@ public class AnalysisQueryService {
         List<DailyRatioOfRecent7Days> dailyRatioOfRecent7Days = toDailyRatioOfRecent7DaysList(transcription.getStartTime());
 
         return AnalysisConverter.toAnalysisResponseDTO(userId, transcription, analysis, averageNegativeRatioOf7DaysAgo, averageNegativeRatioOfToday, dailyRatioOfRecent7Days);
+    }
+
+
+    // 해당 analysis가 자신이 속하는 날짜의 유일한 analysis인지 true/false 반환
+    public boolean isOnlyAnalysisOnSameDay(Long userId, LocalDateTime analysisCreatedAt) {
+        return analysisRepository.countAnalysesOnSameDay(userId, analysisCreatedAt) == 1;
+    }
+
+    // 이번 달 기록이 존재하는 날짜(LocalDate) 리스트
+    public List<LocalDateTime> recordedDatesInMonth(Long userId) {
+
+        YearMonth currentMonth = YearMonth.now();
+        LocalDateTime startOfMonth = currentMonth.atDay(1).atStartOfDay();
+        LocalDateTime endOfMonth = currentMonth.atEndOfMonth().atTime(23, 59, 59);
+
+        return analysisRepository.findRecordedDatesInMonth(userId, startOfMonth, endOfMonth);
     }
 
     // 조회일 기준 7일 전 기록의 평균 부정적 표현 사용 비율 구하기
