@@ -34,7 +34,7 @@ public class RecordCommandService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ArticleErrorCode.USER_NOT_FOUND));
 
-        PresignedUrlResDTO presignedDTO = awsS3Service.getPresignedUrl(fileName);
+        PresignedUrlResDTO presignedDTO = awsS3Service.getPresignedPostUrl(fileName);
 
         if (recordId == null) {
             // recordId가 null이면, SAVING 상태의 새로운 Record 엔티티 생성

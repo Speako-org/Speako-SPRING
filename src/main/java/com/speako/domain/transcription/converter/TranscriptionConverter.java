@@ -1,14 +1,12 @@
 package com.speako.domain.transcription.converter;
 
-import com.speako.domain.transcription.dto.resDTO.TranscriptionResDTO;
 import com.speako.domain.transcription.domain.Transcription;
-
-import java.util.List;
+import com.speako.domain.transcription.dto.resDTO.TranscriptionResDTO;
 
 public class TranscriptionConverter {
 
     // Record -> RecordResDTO
-    public static TranscriptionResDTO toTranscriptionResDTO(Transcription transcription) {
+    public static TranscriptionResDTO toTranscriptionResDTO(Transcription transcription, String s3PathUrl) {
 
         return new TranscriptionResDTO(
                 transcription.getId(),
@@ -18,14 +16,7 @@ public class TranscriptionConverter {
                 transcription.getStartTime(),
                 transcription.getEndTime(),
                 transcription.getTranscriptionStatus(),
-                transcription.getCreatedAt());
-    }
-
-    // List<Record> -> List<RecordResDTO>
-    public static List<TranscriptionResDTO> toTranscriptionResDTOList(List<Transcription> transcriptions) {
-
-        return transcriptions.stream()
-                .map(TranscriptionConverter::toTranscriptionResDTO)
-                .toList();
+                transcription.getCreatedAt(),
+                s3PathUrl);
     }
 }
