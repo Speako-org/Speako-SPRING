@@ -29,7 +29,7 @@ public class AwsS3Service {
     private final AmazonS3 amazonS3;
 
     // Presigned url 생성 및 반환
-    public PresignedUrlResDTO getPresignedUrl(String fileName) {
+    public PresignedUrlResDTO getPresignedPostUrl(String fileName) {
 
         // 파일 확장자 추출
         String ext = fileName.substring(fileName.lastIndexOf("."));
@@ -43,6 +43,18 @@ public class AwsS3Service {
         URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
 
         return new PresignedUrlResDTO(url.toExternalForm(), key);
+    }
+
+    // Presigned url(GET) 생성 및 반환
+    public String getPresignedGetUrl(String key) {
+
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(bucket, key)
+                        .withMethod(HttpMethod.GET)
+                        .withExpiration(getExpiration());
+
+        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+        return url.toExternalForm();
     }
 
     // Presigned URL 생성 요청 객체 생성
